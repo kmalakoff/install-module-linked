@@ -1,0 +1,1 @@
+ignores: ["install-module-linked", "depcheck", "ts-dev-stack", "@types/*", "@biomejs/*"]
