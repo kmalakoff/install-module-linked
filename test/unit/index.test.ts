@@ -14,8 +14,6 @@ const TMP_DIR = path.resolve(__dirname, '..', '..', '.tmp');
 const CACHE_DIR = path.join(TMP_DIR, 'cache');
 const NODE_MODULES = path.join(TMP_DIR, 'node_modules');
 
-const hasPromise = typeof Promise !== 'undefined';
-
 describe('install-module-linked node', () => {
   beforeEach((cb) => {
     const queue = new Queue();
@@ -25,24 +23,37 @@ describe('install-module-linked node', () => {
   });
   after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
-  it('install callback', (done) => {
-    installModule('each-package', NODE_MODULES, { cacheDirectory: CACHE_DIR }, (err) => {
+  it('install callback (with version)', (done) => {
+    installModule('each-package@0.7.1', NODE_MODULES, { cacheDirectory: CACHE_DIR }, (err) => {
       assert.ok(fs.existsSync(path.join(NODE_MODULES, 'each-package')));
-      assert.equal(JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'each-package', 'package.json'), 'utf8')).name, 'each-package');
+      const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'each-package', 'package.json'), 'utf8'));
+      assert.equal(packageJSON.name, 'each-package');
+      assert.equal(packageJSON.version, '0.7.1');
       done(err);
     });
   });
 
-  !hasPromise ||
-    it('install hasPromise', (done) => {
-      installModule('each-package', NODE_MODULES, { cacheDirectory: CACHE_DIR })
-        .then((_value) => {
-          assert.ok(fs.existsSync(path.join(NODE_MODULES, 'each-package')));
-          assert.equal(JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'each-package', 'package.json'), 'utf8')).name, 'each-package');
-          done();
-        })
-        .catch((err) => {
-          done(err);
-        });
+  it('install callback (no version)', (done) => {
+    installModule('each-package', NODE_MODULES, { cacheDirectory: CACHE_DIR }, (err) => {
+      assert.ok(fs.existsSync(path.join(NODE_MODULES, 'each-package')));
+      const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'each-package', 'package.json'), 'utf8'));
+      assert.equal(packageJSON.name, 'each-package');
+      assert.ok(packageJSON.version.length);
+      done(err);
     });
+  });
+
+  it('install hasPromise', (done) => {
+    installModule('each-package@0.4.2', NODE_MODULES, { cacheDirectory: CACHE_DIR })
+      .then((_value) => {
+        assert.ok(fs.existsSync(path.join(NODE_MODULES, 'each-package')));
+        const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'each-package', 'package.json'), 'utf8'));
+        assert.equal(packageJSON.name, 'each-package');
+        assert.equal(packageJSON.version, '0.4.2');
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
 });
