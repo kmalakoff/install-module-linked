@@ -1,5 +1,3 @@
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
 import install from './lib/install.js';
 
 import type { InstallCallback, InstallOptions } from './types.js';
