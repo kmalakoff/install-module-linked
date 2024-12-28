@@ -19,8 +19,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: git config --global user.name "Github Actions"
       - run: git config --global user.email "actions@users.noreply.github.com"
-      - run: npm uninstall node-version-use depcheck -g
-      - run: npm install node-version-use depcheck -g
+      - run: npm uninstall node-version-use depcheck ts-dev-stack -g
+      - run: npm install node-version-use depcheck ts-dev-stack -g
       - run: depcheck
       - run: npm ci
       - run: npx -y playwright install --with-deps
