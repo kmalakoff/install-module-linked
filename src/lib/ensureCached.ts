@@ -11,9 +11,9 @@ import parseInstallString from './parseInstallString.js';
 
 import type { EnsureCachedCallback } from '../types.js';
 
-export default function ensureCached(installString: string, cacheDirectory: string, callback: EnsureCachedCallback) {
+export default function ensureCached(installString: string, cachePath: string, callback: EnsureCachedCallback) {
   installSpecifier(installString, (_err, specifier) => {
-    const cachedAt = path.join(cacheDirectory, specifier);
+    const cachedAt = path.join(cachePath, specifier);
     const { name } = parseInstallString(installString);
 
     access(cachedAt, (err?: Error) => {
