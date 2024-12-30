@@ -15,7 +15,7 @@ import installModule from 'install-module-linked';
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.resolve(__dirname, '..', '..', '.tmp');
 const CACHE_DIR = path.join(TMP_DIR, 'cache');
-const NODE_MODULES = path.join(TMP_DIR, 'node_modules');
+const NODE_MODULES = path.join(TMP_DIR, 'installed', 'node_modules');
 
 describe('install-module-linked node', () => {
   (() => {
@@ -37,7 +37,7 @@ describe('install-module-linked node', () => {
       queue.defer(mkdirp.bind(null, NODE_MODULES));
       queue.await(cb);
     });
-    after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+    // after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
     it('install callback (with version)', (done) => {
       installModule('each-package@0.7.1', NODE_MODULES, { cacheDirectory: CACHE_DIR }, (err) => {

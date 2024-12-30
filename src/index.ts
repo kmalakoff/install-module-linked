@@ -1,4 +1,4 @@
-import install from './lib/install.js';
+import worker from './lib/worker.js';
 
 import type { InstallCallback, InstallOptions } from './types.js';
 
@@ -11,13 +11,10 @@ export default function installModule(installString: string, nodeModulesPath: st
     options = {};
   }
 
-  // choose between promise and callback API
-  if (typeof callback === 'function') {
-    return install(installString, nodeModulesPath, options, callback) as undefined;
-  }
-  return new Promise((resolve, reject) => {
-    install(installString, nodeModulesPath, options, (err, dest) => {
+  if (typeof callback === 'function') return worker(installString, nodeModulesPath, options, callback) as undefined;
+  return new Promise((resolve, reject) =>
+    worker(installString, nodeModulesPath, options, (err, dest) => {
       err ? reject(err) : resolve(dest);
-    });
-  });
+    })
+  );
 }
