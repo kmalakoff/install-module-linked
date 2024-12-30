@@ -40,7 +40,7 @@ describe('install-module-linked node', () => {
     // after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
     it('install callback (with version)', (done) => {
-      installModule('each-package@0.7.1', NODE_MODULES, { cacheDirectory: CACHE_DIR }, (err) => {
+      installModule('each-package@0.7.1', NODE_MODULES, { cachePath: CACHE_DIR }, (err) => {
         assert.ok(fs.existsSync(path.join(NODE_MODULES, 'each-package')));
         const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'each-package', 'package.json'), 'utf8'));
         assert.equal(packageJSON.name, 'each-package');
@@ -50,7 +50,7 @@ describe('install-module-linked node', () => {
     });
 
     it('install callback (no version)', (done) => {
-      installModule('each-package', NODE_MODULES, { cacheDirectory: CACHE_DIR }, (err) => {
+      installModule('each-package', NODE_MODULES, { cachePath: CACHE_DIR }, (err) => {
         assert.ok(fs.existsSync(path.join(NODE_MODULES, 'each-package')));
         const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'each-package', 'package.json'), 'utf8'));
         assert.equal(packageJSON.name, 'each-package');
@@ -60,7 +60,7 @@ describe('install-module-linked node', () => {
     });
 
     it('install (promise)', async () => {
-      await installModule('each-package@0.4.2', NODE_MODULES, { cacheDirectory: CACHE_DIR });
+      await installModule('each-package@0.4.2', NODE_MODULES, { cachePath: CACHE_DIR });
       assert.ok(fs.existsSync(path.join(NODE_MODULES, 'each-package')));
       const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'each-package', 'package.json'), 'utf8'));
       assert.equal(packageJSON.name, 'each-package');

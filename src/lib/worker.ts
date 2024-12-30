@@ -15,14 +15,14 @@ const CACHE_DIR_DEFAULT = path.join(homedir(), '.im', 'cache');
 import type { InstallCallback, InstallOptions } from '../types.js';
 
 export default function installModule(installString: string, nodeModulesPath: string, options: InstallOptions, callback: InstallCallback): void {
-  const cacheDirectory = options.cacheDirectory || CACHE_DIR_DEFAULT;
+  const cachePath = options.cachePath || CACHE_DIR_DEFAULT;
   const { name } = parseInstallString(installString);
   const dest = path.join(nodeModulesPath, ...name.split('/'));
 
   access(dest, (err) => {
     if (!err) return callback(null, dest); // already installed
 
-    ensureCached(installString, cacheDirectory, (err, cachedAt) => {
+    ensureCached(installString, cachePath, (err, cachedAt) => {
       if (err) {
         console.log(`Could not install: ${installString}. Message: ${err.message}`);
         return callback();
