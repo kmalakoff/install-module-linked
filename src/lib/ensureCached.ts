@@ -6,10 +6,10 @@ import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
-import installSpecifier from './installSpecifier.js';
-import parseInstallString from './parseInstallString.js';
+import installSpecifier from './installSpecifier';
+import parseInstallString from './parseInstallString';
 
-import type { EnsureCachedCallback } from '../types.js';
+import type { EnsureCachedCallback } from '../types';
 
 export default function ensureCached(installString: string, cachePath: string, callback: EnsureCachedCallback) {
   installSpecifier(installString, (_err, specifier) => {

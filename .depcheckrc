@@ -1,1 +1,1 @@
-ignores: ["install-module-linked", "depcheck", "ts-dev-stack", "@types/*", "@biomejs/*"]
+ignores: ["install-module-linked", "ts-dev-stack", "@types/*", "@biomejs/*"]
