@@ -5,17 +5,17 @@ import homedir from 'homedir-polyfill';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
-import ensureCached from './ensureCached.js';
-import parseInstallString from './parseInstallString.js';
+import ensureCached from './ensureCached';
+import parseInstallString from './parseInstallString';
 
 const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
 const symlinkType = isWindows ? 'junction' : 'dir';
-const CACHE_DIR_DEFAULT = path.join(homedir(), '.im', 'cache');
+const DEFAULT_CACHE_PATH = path.join(homedir(), '.im', 'cache');
 
-import type { InstallCallback, InstallOptions } from '../types.js';
+import type { InstallCallback, InstallOptions } from '../types';
 
 export default function installModule(installString: string, nodeModulesPath: string, options: InstallOptions, callback: InstallCallback): void {
-  const cachePath = options.cachePath || CACHE_DIR_DEFAULT;
+  const cachePath = options.cachePath || DEFAULT_CACHE_PATH;
   const { name } = parseInstallString(installString);
   const dest = path.join(nodeModulesPath, ...name.split('/'));
 

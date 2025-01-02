@@ -1,11 +1,9 @@
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
-
 import assert from 'assert';
 import fs from 'fs';
 import path from 'path';
 import url from 'url';
 import mkdirp from 'mkdirp-classic';
+import Pinkie from 'pinkie-promise';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 
@@ -20,10 +18,13 @@ const NODE_MODULES = path.join(TMP_DIR, 'installed', 'node_modules');
 describe('install-module-linked node', () => {
   (() => {
     // patch and restore promise
+    // @ts-ignore
+    // @ts-ignore
     let rootPromise: Promise;
     before(() => {
       rootPromise = global.Promise;
-      global.Promise = Promise;
+      // @ts-ignore
+      global.Promise = Pinkie;
     });
     after(() => {
       global.Promise = rootPromise;
