@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "lib": ["es2015", "dom", "esnext.asynciterable"],
+    "lib": ["es2015"],
     "types": ["mocha", "node"],
     "target": "es2020",
     "module": "esnext",
@@ -12,6 +12,6 @@
     "downlevelIteration": true,
     "allowJs": true
   },
-  "exclude": ["node_modules", "dist"],
+  "exclude": ["node_modules", "dist", "test/data"],
   "include": ["src", "test"]
 }
