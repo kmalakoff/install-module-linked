@@ -19,7 +19,6 @@ describe('install-module-linked node', () => {
   (() => {
     // patch and restore promise
     // @ts-ignore
-    // @ts-ignore
     let rootPromise: Promise;
     before(() => {
       rootPromise = global.Promise;
