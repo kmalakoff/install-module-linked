@@ -37,7 +37,7 @@
   "module": "dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
   "bin": {
-    "im": "./bin/cli.cjs"
+    "iml": "./bin/cli.cjs"
   },
   "files": [
     "dist"
