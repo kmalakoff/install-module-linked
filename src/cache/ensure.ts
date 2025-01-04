@@ -6,15 +6,15 @@ import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
-import installSpecifier from './installSpecifier';
-import parseInstallString from './parseInstallString';
+import getSpecifier from '../lib/getSpecifier';
+import parse from '../lib/parseInstallString';
 
 import type { EnsureCachedCallback } from '../types';
 
 export default function ensureCached(installString: string, cachePath: string, callback: EnsureCachedCallback) {
-  installSpecifier(installString, (_err, specifier) => {
+  getSpecifier(installString, (_err, specifier) => {
     const cachedAt = path.join(cachePath, specifier);
-    const { name } = parseInstallString(installString);
+    const { name } = parse(installString);
 
     access(cachedAt, (err?: Error) => {
       if (!err) return callback(null, cachedAt); // already cached
@@ -26,7 +26,7 @@ export default function ensureCached(installString: string, cachePath: string, c
       const queue = new Queue(1);
       queue.defer(mkdirp.bind(null, tmp));
       queue.defer(fs.writeFile.bind(null, path.join(tmp, 'package.json'), '{}', 'utf8'));
-      queue.defer(spawn.bind(null, 'npm', ['install', specifier], { cwd: tmp, env }));
+      queue.defer(spawn.bind(null, 'npm', ['install', specifier], { cwd: tmp, env, encoding: 'utf8' }));
       queue.defer((cb) => fs.rename(tmpModulePath, cachedAt, cb.bind(null, null)));
       queue.defer((cb) => fs.rename(path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules'), cb.bind(null, null)));
       queue.await((err) => {
