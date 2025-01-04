@@ -1,18 +1,17 @@
 import fs from 'fs';
 import path from 'path';
 import access from 'fs-access-compat';
-import homedir from 'homedir-polyfill';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
-import ensureCached from './ensureCached';
-import parseInstallString from './parseInstallString';
+import ensureCached from './cache/ensure';
+import { DEFAULT_CACHE_PATH } from './constants';
+import parseInstallString from './lib/parseInstallString';
 
 const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
 const symlinkType = isWindows ? 'junction' : 'dir';
-const DEFAULT_CACHE_PATH = path.join(homedir(), '.im', 'cache');
 
-import type { InstallCallback, InstallOptions } from '../types';
+import type { InstallCallback, InstallOptions } from './types';
 
 export default function installModule(installString: string, nodeModulesPath: string, options: InstallOptions, callback: InstallCallback): void {
   const cachePath = options.cachePath || DEFAULT_CACHE_PATH;
