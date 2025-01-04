@@ -1,4 +1,4 @@
-import worker from './lib/worker';
+import worker from './worker';
 
 import type { InstallCallback, InstallOptions } from './types';
 

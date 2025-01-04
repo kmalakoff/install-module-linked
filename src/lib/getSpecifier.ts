@@ -7,7 +7,7 @@ interface JSONPackage {
   version: string;
 }
 
-export default function installSpecifier(installString: string, callback: GetScopedSpecifiedCallback) {
+export default function getSpecifier(installString: string, callback: GetScopedSpecifiedCallback) {
   const { name, version } = parseInstallString(installString);
   if (version) return callback(null, installString);
 
