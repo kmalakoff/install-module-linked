@@ -11,7 +11,7 @@ import rimraf2 from 'rimraf2';
 import installModule from 'install-module-linked';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-const TMP_DIR = path.resolve(__dirname, '..', '..', '.tmp');
+const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
 const CACHE_DIR = path.join(TMP_DIR, 'cache');
 const NODE_MODULES = path.join(TMP_DIR, 'installed', 'node_modules');
 
