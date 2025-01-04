@@ -49,9 +49,9 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "cross-spawn-cb": "^2.0.11",
+    "cross-spawn-cb": "^2.0.12",
     "fs-access-compat": "^1.1.4",
-    "get-remote": "^1.3.7",
+    "get-remote": "^1.3.8",
     "homedir-polyfill": "^1.0.3",
     "mkdirp-classic": "^0.5.3",
     "queue-cb": "^1.4.9",
