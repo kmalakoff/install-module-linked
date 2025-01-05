@@ -2,13 +2,7 @@
 
 import exit from 'exit';
 import getopts from 'getopts-compat';
-import rimraf2 from 'rimraf2';
-import { DEFAULT_CACHE_PATH } from './constants';
-
-function clean() {
-  rimraf2.sync(DEFAULT_CACHE_PATH, { disableGlob: true });
-  console.log(`Cleaned ${DEFAULT_CACHE_PATH}`);
-}
+import clean from './lib/clean';
 
 export default (argv) => {
   const options = getopts(argv, { stopEarly: true });
