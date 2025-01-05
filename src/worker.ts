@@ -4,8 +4,8 @@ import access from 'fs-access-compat';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
-import ensureCached from './cache/ensure';
 import { DEFAULT_CACHE_PATH } from './constants';
+import cache from './lib/cache';
 import parseInstallString from './lib/parseInstallString';
 
 const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
@@ -21,7 +21,7 @@ export default function installModule(installString: string, nodeModulesPath: st
   access(dest, (err) => {
     if (!err) return callback(null, dest); // already installed
 
-    ensureCached(installString, cachePath, (err, cachedAt) => {
+    cache(installString, cachePath, (err, cachedAt) => {
       if (err) {
         console.log(`Could not install: ${installString}. Message: ${err.message}`);
         return callback();
