@@ -6,8 +6,8 @@ import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
-import getSpecifier from '../lib/getSpecifier';
-import parse from '../lib/parseInstallString';
+import getSpecifier from './getSpecifier';
+import parse from './parseInstallString';
 
 import type { EnsureCachedCallback } from '../types';
 
