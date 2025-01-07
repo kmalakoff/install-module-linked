@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import spawn from 'cross-spawn-cb';
 import access from 'fs-access-compat';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
 import getSpecifier from './getSpecifier';
+import install from './install.cjs';
 import parse from './parseInstallString';
 
 import type { EnsureCachedCallback } from '../types';
@@ -19,14 +19,13 @@ export default function ensureCached(installString: string, cachePath: string, c
     access(cachedAt, (err?: Error) => {
       if (!err) return callback(null, cachedAt); // already cached
 
-      const { NODE_OPTIONS, ...env } = process.env;
       const tmp = `${cachedAt}-${tempSuffix()}`;
       const tmpModulePath = path.join(tmp, 'node_modules', ...name.split('/'));
 
       const queue = new Queue(1);
       queue.defer(mkdirp.bind(null, tmp));
       queue.defer(fs.writeFile.bind(null, path.join(tmp, 'package.json'), '{}', 'utf8'));
-      queue.defer(spawn.bind(null, 'npm', ['install', specifier], { cwd: tmp, env, encoding: 'utf8' }));
+      queue.defer(install.bind(null, specifier, tmp));
       queue.defer((cb) => fs.rename(tmpModulePath, cachedAt, cb.bind(null, null)));
       queue.defer((cb) => fs.rename(path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules'), cb.bind(null, null)));
       queue.await((err) => {
