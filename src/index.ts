@@ -7,16 +7,18 @@ export type * from './types';
 export { default as clean } from './lib/clean';
 export { default as parseInstallString } from './lib/parseInstallString';
 
-export default function installModule(installString: string, nodeModulesPath: string, options: InstallOptions | InstallCallback, callback?: InstallCallback): undefined | Promise<string> {
+export default function installModule(installString: string, nodeModulesPath: string, options?: InstallOptions | InstallCallback, callback?: InstallCallback): undefined | Promise<string> {
   if (typeof options === 'function') {
-    callback = options;
+    callback = options as InstallCallback;
     options = {};
   }
+  options = options || {};
 
   if (typeof callback === 'function') return workerAsync(installString, nodeModulesPath, options, callback) as undefined;
   return new Promise((resolve, reject) => workerAsync(installString, nodeModulesPath, options, (err, dest) => (err ? reject(err) : resolve(dest))));
 }
 
-export function sync(installString: string, nodeModulesPath: string, options: InstallOptions): string | undefined {
+export function sync(installString: string, nodeModulesPath: string, options?: InstallOptions): string | undefined {
+  options = options || {};
   return workerSync(installString, nodeModulesPath, options);
 }
