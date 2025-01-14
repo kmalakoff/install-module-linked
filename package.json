@@ -54,8 +54,8 @@
     "getopts-compat": "^2.2.6",
     "homedir-polyfill": "^1.0.3",
     "mkdirp-classic": "^0.5.3",
-    "node-version-call": "^1.6.12",
-    "queue-cb": "^1.4.11",
+    "node-version-call": "^1.6.13",
+    "queue-cb": "^1.4.12",
     "rimraf2": "^2.8.2",
     "temp-suffix": "^0.1.9"
   },
