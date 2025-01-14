@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import access from 'fs-access-compat';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
@@ -16,7 +15,7 @@ export default function ensureCached(installString: string, cachePath: string, c
     const cachedAt = path.join(cachePath, specifier);
     const { name } = parse(installString);
 
-    access(cachedAt, (err?: Error) => {
+    fs.stat(cachedAt, (err?: Error) => {
       if (!err) return callback(null, cachedAt); // already cached
 
       const tmp = `${cachedAt}-${tempSuffix()}`;
