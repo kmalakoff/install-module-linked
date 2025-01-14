@@ -50,7 +50,7 @@
     "cross-spawn-cb": "^2.1.6",
     "exit": "^0.1.2",
     "function-exec-sync": "^1.2.9",
-    "get-remote": "^1.3.13",
+    "get-remote": "^1.3.14",
     "getopts-compat": "^2.2.6",
     "homedir-polyfill": "^1.0.3",
     "mkdirp-classic": "^0.5.3",
