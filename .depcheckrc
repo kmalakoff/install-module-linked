@@ -1,1 +1,1 @@
-ignores: ["install-module-linked", "ts-dev-stack", "@types/*", "@biomejs/*"]
+ignores: ["@types/*", "install-module-linked", "ts-dev-stack", "@biomejs/*"]

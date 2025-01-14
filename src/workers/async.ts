@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import access from 'fs-access-compat';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
@@ -18,7 +17,7 @@ export default function installModule(installString: string, nodeModulesPath: st
   const { name } = parseInstallString(installString);
   const dest = path.join(nodeModulesPath, ...name.split('/'));
 
-  access(dest, (err) => {
+  fs.stat(dest, (err) => {
     if (!err) return callback(null, dest); // already installed
 
     cache(installString, cachePath, (err, cachedAt) => {
@@ -30,7 +29,7 @@ export default function installModule(installString: string, nodeModulesPath: st
       queue.defer(mkdirp.bind(null, path.dirname(dest)));
       queue.defer(rimraf2.bind(null, dest, { disableGlob: true }));
       queue.defer(fs.symlink.bind(null, cachedAt, dest, symlinkType));
-      queue.defer(access.bind(null, dest));
+      queue.defer(fs.stat.bind(null, dest));
       queue.await((err) => {
         err ? callback(err) : callback(null, dest);
       });
