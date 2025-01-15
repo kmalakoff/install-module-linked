@@ -10,7 +10,7 @@ export default (argv) => {
   const args = options._;
   if (!args.length) {
     console.log('Missing command. Example usage: iml [command]');
-    return exit(1);
+    return exit(6);
   }
 
   if (args[0] === 'clean') {
@@ -19,5 +19,5 @@ export default (argv) => {
   }
 
   console.log(`Unrecognized command: ${argv[0]}. Example usage: im [command]`);
-  return exit(1);
+  return exit(7);
 };
