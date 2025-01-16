@@ -28,7 +28,7 @@ export default function ensureCached(installString: string, cachePath: string, c
       queue.defer((cb) => fs.rename(tmpModulePath, cachedAt, cb.bind(null, null)));
       queue.defer((cb) => fs.rename(path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules'), cb.bind(null, null)));
       queue.await((err) => {
-        // clean up whether installed or not
+        // clear up whether installed or not
         rimraf2(tmp, { disableGlob: true }, () => (err ? callback(err) : callback(null, cachedAt)));
       });
     });

@@ -4,7 +4,7 @@ import workerSync from './workers/sync.cjs';
 import type { InstallCallback, InstallOptions } from './types';
 
 export type * from './types';
-export { default as clean } from './lib/clean';
+export { default as clear } from './lib/clear';
 export { default as parseInstallString } from './lib/parseInstallString';
 
 export default function installModule(installString: string, nodeModulesPath: string, options?: InstallOptions | InstallCallback, callback?: InstallCallback): undefined | Promise<string> {
