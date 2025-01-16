@@ -2,7 +2,7 @@
 
 import exit from 'exit';
 import getopts from 'getopts-compat';
-import clean from './lib/clean';
+import clear from './lib/clear';
 
 export default (argv) => {
   const options = getopts(argv, { stopEarly: true });
@@ -13,8 +13,8 @@ export default (argv) => {
     return exit(6);
   }
 
-  if (args[0] === 'clean') {
-    clean();
+  if (args[0] === 'clear') {
+    clear();
     return exit(0);
   }
 
