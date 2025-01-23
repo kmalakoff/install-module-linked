@@ -55,7 +55,7 @@
     "homedir-polyfill": "^1.0.3",
     "lock": "^1.1.0",
     "mkdirp-classic": "^0.5.3",
-    "node-version-call": "^1.6.43",
+    "node-version-call": "^1.6.44",
     "queue-cb": "^1.4.16",
     "rimraf2": "^2.8.2",
     "temp-suffix": "^0.1.14"
