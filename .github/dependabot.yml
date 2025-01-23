@@ -4,8 +4,6 @@ updates:
     directory: '/'
     schedule:
       interval: daily
-    ignore:
-      - dependency-name: "readable-stream"
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
