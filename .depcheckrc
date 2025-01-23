@@ -1,1 +1,1 @@
-ignores: ["install-module-linked", "ts-dev-stack"]
+ignores: ["install-module-linked"]
