@@ -22,3 +22,5 @@ export function sync(installString: string, nodeModulesPath: string, options?: I
   options = options || {};
   return workerSync(installString, nodeModulesPath, options);
 }
+
+export { default as install } from './lib/install.cjs';
