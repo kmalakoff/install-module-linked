@@ -1,7 +1,7 @@
 import get from 'get-remote';
-import parseInstallString from './parseInstallString';
+import parseInstallString from './parseInstallString.js';
 
-import type { GetScopedSpecifiedCallback } from '../types';
+import type { GetScopedSpecifiedCallback } from '../types.js';
 
 interface JSONPackage {
   version: string;
