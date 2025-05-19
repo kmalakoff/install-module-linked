@@ -48,15 +48,15 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "cross-spawn-cb": "^2.2.1",
+    "cross-spawn-cb": "^2.2.2",
     "exit": "^0.1.2",
-    "function-exec-sync": "^1.2.23",
+    "function-exec-sync": "^1.2.24",
     "get-remote": "^1.4.2",
     "getopts-compat": "^2.2.6",
     "homedir-polyfill": "^1.0.3",
     "lock": "^1.1.0",
     "mkdirp-classic": "^0.5.3",
-    "node-exec-path": "^1.0.32",
+    "node-exec-path": "^1.0.33",
     "node-version-utils": "^1.2.16",
     "queue-cb": "^1.5.0",
     "rimraf2": "^2.8.2",
