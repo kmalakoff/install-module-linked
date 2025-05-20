@@ -48,19 +48,19 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "cross-spawn-cb": "^2.2.2",
+    "cross-spawn-cb": "^2.2.3",
     "exit": "^0.1.2",
-    "function-exec-sync": "^1.2.24",
+    "function-exec-sync": "^1.2.25",
     "get-remote": "^1.4.3",
     "getopts-compat": "^2.2.6",
     "homedir-polyfill": "^1.0.3",
     "lock": "^1.1.0",
     "mkdirp-classic": "^0.5.3",
-    "node-exec-path": "^1.0.33",
-    "node-version-utils": "^1.2.16",
+    "node-exec-path": "^1.0.34",
+    "node-version-utils": "^1.2.17",
     "queue-cb": "^1.5.0",
     "rimraf2": "^2.8.2",
-    "temp-suffix": "^0.1.17"
+    "temp-suffix": "^0.1.18"
   },
   "devDependencies": {
     "@types/mocha": "*",
