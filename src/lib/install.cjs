@@ -11,8 +11,8 @@ module.exports = function install(specifier, dest, callback) {
 
   if (!execPath) {
     const satisfiesSemverSync = require('node-exec-path').satisfiesSemverSync;
-    execPath = satisfiesSemverSync('>0'); // must be more than node 0.12
-    if (!execPath) return callback(new Error('install-module-linked a version of node >0 to use npm install'));
+    execPath = satisfiesSemverSync('>0.12'); // must be more than node 0.12
+    if (!execPath) return callback(new Error('install-module-linked a version of node >0.12 to use npm install'));
   }
 
   try {
