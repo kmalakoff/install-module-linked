@@ -42,7 +42,7 @@
   ],
   "scripts": {
     "build": "tsds build",
-    "format": "biome check --write --unsafe src/ test/",
+    "format": "biome check --write --unsafe",
     "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines tsds test:node --no-timeouts",
     "version": "tsds version"
@@ -51,7 +51,7 @@
     "cross-spawn-cb": "^2.2.8",
     "exit": "^0.1.2",
     "function-exec-sync": "^1.2.27",
-    "get-remote": "^1.4.11",
+    "get-remote": "^1.4.12",
     "getopts-compat": "^2.2.6",
     "homedir-polyfill": "^1.0.3",
     "lock": "^1.1.0",
