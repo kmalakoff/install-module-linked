@@ -1,14 +1,13 @@
 import fs from 'fs';
-import path from 'path';
 import mkdirp from 'mkdirp-classic';
+import path from 'path';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
+import type { EnsureCachedCallback } from '../types.js';
 import getSpecifier from './getSpecifier.js';
 import install from './install.cjs';
 import parse from './parseInstallString.js';
-
-import type { EnsureCachedCallback } from '../types.js';
 
 export default function ensureCached(installString: string, cachePath: string, callback: EnsureCachedCallback) {
   getSpecifier(installString, (_err, specifier) => {

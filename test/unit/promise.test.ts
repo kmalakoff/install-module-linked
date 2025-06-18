@@ -1,14 +1,13 @@
 import assert from 'assert';
 import fs from 'fs';
-import path from 'path';
-import url from 'url';
+// @ts-ignore
+import installModule from 'install-module-linked';
 import mkdirp from 'mkdirp-classic';
+import path from 'path';
 import Pinkie from 'pinkie-promise';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
-
-// @ts-ignore
-import installModule from 'install-module-linked';
+import url from 'url';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');

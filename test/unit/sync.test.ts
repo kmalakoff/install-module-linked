@@ -1,13 +1,12 @@
 import assert from 'assert';
 import fs from 'fs';
-import path from 'path';
-import url from 'url';
-import mkdirp from 'mkdirp-classic';
-import Queue from 'queue-cb';
-import rimraf2 from 'rimraf2';
-
 // @ts-ignore
 import { sync as installModuleSync } from 'install-module-linked';
+import mkdirp from 'mkdirp-classic';
+import path from 'path';
+import Queue from 'queue-cb';
+import rimraf2 from 'rimraf2';
+import url from 'url';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
