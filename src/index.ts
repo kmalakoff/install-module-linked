@@ -1,10 +1,10 @@
-import type { InstallCallback, InstallOptions } from './types.js';
-import worker from './workers/async.js';
+import type { InstallCallback, InstallOptions } from './types.ts';
+import worker from './workers/async.ts';
 import workerSync from './workers/sync.cjs';
 
-export { default as clear } from './lib/clear.js';
-export { default as parseInstallString } from './lib/parseInstallString.js';
-export type * from './types.js';
+export { default as clear } from './lib/clear.ts';
+export { default as parseInstallString } from './lib/parseInstallString.ts';
+export type * from './types.ts';
 
 export default function installModule(installString: string, nodeModulesPath: string, options?: InstallOptions | InstallCallback, callback?: InstallCallback): undefined | Promise<string> {
   if (typeof options === 'function') {
