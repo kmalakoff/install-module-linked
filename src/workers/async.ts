@@ -4,16 +4,16 @@ import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
-import { DEFAULT_CACHE_PATH } from '../constants.js';
-import cache from '../lib/cache.js';
-import parseInstallString from '../lib/parseInstallString.js';
+import { DEFAULT_CACHE_PATH } from '../constants.ts';
+import cache from '../lib/cache.ts';
+import parseInstallString from '../lib/parseInstallString.ts';
 
 const lock = Lock();
 
 const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
 const symlinkType = isWindows ? 'junction' : 'dir';
 
-import type { InstallCallback, InstallOptions } from '../types.js';
+import type { InstallCallback, InstallOptions } from '../types.ts';
 
 export default function installModule(installString: string, nodeModulesPath: string, options: InstallOptions, callback: InstallCallback): void {
   lock([installString, nodeModulesPath], (release) => {

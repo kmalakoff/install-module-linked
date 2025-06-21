@@ -2,7 +2,7 @@
 
 import exit from 'exit';
 import getopts from 'getopts-compat';
-import clear from './lib/clear.js';
+import clear from './lib/clear.ts';
 
 const ERROR_CODE = 7;
 

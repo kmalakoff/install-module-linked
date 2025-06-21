@@ -35,7 +35,7 @@
   "main": "dist/cjs/index.js",
   "types": "dist/cjs/index.d.cts",
   "bin": {
-    "iml": "./bin/cli.js"
+    "iml": "bin/cli.js"
   },
   "files": [
     "dist"
@@ -50,15 +50,15 @@
   "dependencies": {
     "cross-spawn-cb": "^2.2.10",
     "exit": "^0.1.2",
-    "function-exec-sync": "^1.2.29",
-    "get-remote": "^1.4.14",
+    "function-exec-sync": "^1.3.0",
+    "get-remote": "^1.4.15",
     "getopts-compat": "^2.2.6",
     "homedir-polyfill": "^1.0.3",
     "lock": "^1.1.0",
     "mkdirp-classic": "^0.5.3",
     "node-exec-path": "^1.0.37",
-    "node-version-utils": "^1.2.21",
-    "queue-cb": "^1.5.4",
+    "node-version-utils": "^1.2.22",
+    "queue-cb": "^1.5.5",
     "rimraf2": "^2.8.2",
     "temp-suffix": "^0.1.20"
   },
