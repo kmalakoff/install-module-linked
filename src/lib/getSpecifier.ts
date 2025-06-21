@@ -1,6 +1,6 @@
 import get from 'get-remote';
-import type { GetScopedSpecifiedCallback } from '../types.js';
-import parseInstallString from './parseInstallString.js';
+import type { GetScopedSpecifiedCallback } from '../types.ts';
+import parseInstallString from './parseInstallString.ts';
 
 interface JSONPackage {
   version: string;
