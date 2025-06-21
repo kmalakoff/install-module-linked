@@ -6,7 +6,7 @@ import clear from './lib/clear.ts';
 
 const ERROR_CODE = 7;
 
-export default (argv) => {
+export default (argv: string[]): undefined => {
   const options = getopts(argv, { stopEarly: true });
 
   const args = options._;
@@ -21,5 +21,5 @@ export default (argv) => {
   }
 
   console.log(`Unrecognized command: ${argv[0]}. Example usage: im [command]`);
-  return exit(ERROR_CODE);
+  exit(ERROR_CODE);
 };
