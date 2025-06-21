@@ -4,10 +4,10 @@ import path from 'path';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
-import type { EnsureCachedCallback } from '../types.js';
-import getSpecifier from './getSpecifier.js';
+import type { EnsureCachedCallback } from '../types.ts';
+import getSpecifier from './getSpecifier.ts';
 import install from './install.cjs';
-import parse from './parseInstallString.js';
+import parse from './parseInstallString.ts';
 
 export default function ensureCached(installString: string, cachePath: string, callback: EnsureCachedCallback) {
   getSpecifier(installString, (_err, specifier) => {
