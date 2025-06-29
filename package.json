@@ -51,7 +51,7 @@
     "cross-spawn-cb": "^2.3.9",
     "exit": "^0.1.2",
     "function-exec-sync": "^1.4.3",
-    "get-remote": "^2.0.8",
+    "get-remote": "^2.0.9",
     "getopts-compat": "^2.2.6",
     "homedir-polyfill": "^1.0.3",
     "lock": "^1.1.0",
