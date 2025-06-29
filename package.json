@@ -48,10 +48,10 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "cross-spawn-cb": "^2.3.10",
+    "cross-spawn-cb": "^2.4.0",
     "exit": "^0.1.2",
     "function-exec-sync": "^1.4.4",
-    "get-remote": "^2.0.10",
+    "get-remote": "^2.1.0",
     "getopts-compat": "^2.2.6",
     "homedir-polyfill": "^1.0.3",
     "lock": "^1.1.0",
