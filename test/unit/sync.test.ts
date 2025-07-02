@@ -24,16 +24,16 @@ describe('install-module-linked (sync)', () => {
     after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
     it('install with version', () => {
-      installModuleSync('each-package@0.7.1', NODE_MODULES, { cachePath: CACHE_DIR });
-      const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'each-package', 'package.json'), 'utf8'));
-      assert.equal(packageJSON.name, 'each-package');
-      assert.equal(packageJSON.version, '0.7.1');
+      installModuleSync('resolve-once@1.0.0', NODE_MODULES, { cachePath: CACHE_DIR });
+      const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'resolve-once', 'package.json'), 'utf8'));
+      assert.equal(packageJSON.name, 'resolve-once');
+      assert.equal(packageJSON.version, '1.0.0');
     });
 
     it('install no version', () => {
-      installModuleSync('each-package', NODE_MODULES, { cachePath: CACHE_DIR });
-      const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'each-package', 'package.json'), 'utf8'));
-      assert.equal(packageJSON.name, 'each-package');
+      installModuleSync('resolve-once', NODE_MODULES, { cachePath: CACHE_DIR });
+      const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'resolve-once', 'package.json'), 'utf8'));
+      assert.equal(packageJSON.name, 'resolve-once');
       assert.ok(packageJSON.version.length);
     });
   });
