@@ -1,5 +1,4 @@
 import assert from 'assert';
-// @ts-ignore
 import installModule from 'install-module-linked';
 
 describe('exports .ts', () => {

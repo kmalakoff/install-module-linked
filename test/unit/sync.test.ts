@@ -1,6 +1,5 @@
 import assert from 'assert';
 import fs from 'fs';
-// @ts-ignore
 import { sync as installModuleSync } from 'install-module-linked';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
