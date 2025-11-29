@@ -8,9 +8,9 @@ import rimraf2 from 'rimraf2';
 import url from 'url';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
+const TMP_DIR = path.join(__dirname, '..', '..', '.tmp', 'sync');
 const CACHE_DIR = path.join(TMP_DIR, 'cache');
-const NODE_MODULES = path.join(TMP_DIR, 'installed', 'node_modules');
+const NODE_MODULES = path.join(TMP_DIR, 'node_modules');
 
 describe('install-module-linked (sync)', () => {
   describe('setup tests', () => {
