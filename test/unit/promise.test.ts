@@ -9,9 +9,9 @@ import rimraf2 from 'rimraf2';
 import url from 'url';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
+const TMP_DIR = path.join(__dirname, '..', '..', '.tmp', 'promise');
 const CACHE_DIR = path.join(TMP_DIR, 'cache');
-const NODE_MODULES = path.join(TMP_DIR, 'installed', 'node_modules');
+const NODE_MODULES = path.join(TMP_DIR, 'node_modules');
 const STRESS_COUNT = 10;
 
 describe('install-module-linked (promise)', () => {
