@@ -10,7 +10,8 @@ import install from './install.cjs';
 import parse from './parseInstallString.ts';
 
 export default function ensureCached(installString: string, cachePath: string, callback: EnsureCachedCallback) {
-  getSpecifier(installString, (_err, specifier) => {
+  getSpecifier(installString, (err, specifier) => {
+    if (err) return callback(err);
     const cachedAt = path.join(cachePath, specifier);
     const { name } = parse(installString);
 
