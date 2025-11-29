@@ -3,7 +3,6 @@ import worker from './workers/async.ts';
 import workerSync from './workers/sync.cjs';
 
 export { default as clear } from './lib/clear.ts';
-export { default as loadModule, type LoadCallback } from './lib/loadModule.ts';
 export { default as parseInstallString } from './lib/parseInstallString.ts';
 export type * from './types.ts';
 
