@@ -55,7 +55,6 @@
     "get-remote": "*",
     "getopts-compat": "*",
     "homedir-polyfill": "*",
-    "lock": "*",
     "mkdirp-classic": "*",
     "node-exec-path": "*",
     "node-version-utils": "*",
