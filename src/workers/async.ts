@@ -35,7 +35,7 @@ export default function installModule(installString: string, nodeModulesPath: st
       queue.defer((cb) => {
         fs.rename(tempDest, dest, (err) => {
           // If rename fails because dest exists, another process won - that's ok
-          if (err && (err.code === 'EEXIST' || err.code === 'ENOTEMPTY')) {
+          if (err && ['EEXIST', 'ENOTEMPTY', 'EPERM'].indexOf(err.code) >= 0) {
             rimraf2(tempDest, { disableGlob: true }, () => cb());
             return;
           }
