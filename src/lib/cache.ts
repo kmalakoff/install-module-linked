@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { rm } from 'fs-remove-compat';
+import { safeRm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Queue from 'queue-cb';
@@ -29,7 +29,7 @@ export default function ensureCached(installString: string, cachePath: string, c
       queue.defer((cb) => fs.rename(path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules'), cb.bind(null, null)));
       queue.await((err) => {
         // clear up whether installed or not
-        rm(tmp, () => (err ? callback(err) : callback(null, cachedAt)));
+        safeRm(tmp, () => (err ? callback(err) : callback(null, cachedAt)));
       });
     });
   });
