@@ -1,8 +1,8 @@
 import fs from 'fs';
+import { rm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Queue from 'queue-cb';
-import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
 import { DEFAULT_CACHE_PATH } from '../constants.ts';
 import cache from '../lib/cache.ts';
@@ -36,7 +36,7 @@ export default function installModule(installString: string, nodeModulesPath: st
         fs.rename(tempDest, dest, (err) => {
           // If rename fails because dest exists, another process won - that's ok
           if (err && ['EEXIST', 'ENOTEMPTY', 'EPERM'].indexOf(err.code) >= 0) {
-            rimraf2(tempDest, { disableGlob: true }, () => cb());
+            rm(tempDest, () => cb());
             return;
           }
           cb(err);
@@ -44,7 +44,7 @@ export default function installModule(installString: string, nodeModulesPath: st
       });
       queue.await((err) => {
         if (err) {
-          rimraf2(tempDest, { disableGlob: true }, () => callback(err));
+          rm(tempDest, () => callback(err));
           return;
         }
         callback(null, dest);

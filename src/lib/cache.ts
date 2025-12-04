@@ -1,8 +1,8 @@
 import fs from 'fs';
+import { rm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Queue from 'queue-cb';
-import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
 import type { EnsureCachedCallback } from '../types.ts';
 import getSpecifier from './getSpecifier.ts';
@@ -29,7 +29,7 @@ export default function ensureCached(installString: string, cachePath: string, c
       queue.defer((cb) => fs.rename(path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules'), cb.bind(null, null)));
       queue.await((err) => {
         // clear up whether installed or not
-        rimraf2(tmp, { disableGlob: true }, () => (err ? callback(err) : callback(null, cachedAt)));
+        rm(tmp, () => (err ? callback(err) : callback(null, cachedAt)));
       });
     });
   });

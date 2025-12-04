@@ -52,6 +52,7 @@
   "dependencies": {
     "cross-spawn-cb": "*",
     "exit": "*",
+    "fs-remove-compat": "*",
     "function-exec-sync": "*",
     "get-remote": "*",
     "getopts-compat": "*",
@@ -60,7 +61,6 @@
     "node-exec-path": "*",
     "node-version-utils": "*",
     "queue-cb": "*",
-    "rimraf2": "*",
     "temp-suffix": "*"
   },
   "devDependencies": {
