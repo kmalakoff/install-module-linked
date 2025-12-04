@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { rm } from 'fs-remove-compat';
+import { safeRm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Queue from 'queue-cb';
@@ -36,7 +36,7 @@ export default function installModule(installString: string, nodeModulesPath: st
         fs.rename(tempDest, dest, (err) => {
           // If rename fails because dest exists, another process won - that's ok
           if (err && ['EEXIST', 'ENOTEMPTY', 'EPERM'].indexOf(err.code) >= 0) {
-            rm(tempDest, () => cb());
+            safeRm(tempDest, () => cb());
             return;
           }
           cb(err);
@@ -44,7 +44,7 @@ export default function installModule(installString: string, nodeModulesPath: st
       });
       queue.await((err) => {
         if (err) {
-          rm(tempDest, () => callback(err));
+          safeRm(tempDest, () => callback(err));
           return;
         }
         callback(null, dest);
