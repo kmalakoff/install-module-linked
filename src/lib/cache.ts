@@ -8,6 +8,7 @@ import type { EnsureCachedCallback } from '../types.ts';
 import getSpecifier from './getSpecifier.ts';
 import install from './install.cjs';
 import parse from './parseInstallString.ts';
+import renameWithFallback from './renameWithFallback.ts';
 
 export default function ensureCached(installString: string, cachePath: string, callback: EnsureCachedCallback) {
   getSpecifier(installString, (err, specifier) => {
@@ -25,8 +26,8 @@ export default function ensureCached(installString: string, cachePath: string, c
       queue.defer(mkdirp.bind(null, tmp));
       queue.defer(fs.writeFile.bind(null, path.join(tmp, 'package.json'), '{}', 'utf8'));
       queue.defer(install.bind(null, specifier, tmp));
-      queue.defer((cb) => fs.rename(tmpModulePath, cachedAt, cb.bind(null, null)));
-      queue.defer((cb) => fs.rename(path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules'), cb.bind(null, null)));
+      queue.defer((cb) => renameWithFallback(tmpModulePath, cachedAt, cb));
+      queue.defer((cb) => renameWithFallback(path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules'), cb));
       queue.await((err) => {
         // clear up whether installed or not
         safeRm(tmp, () => (err ? callback(err) : callback(null, cachedAt)));
