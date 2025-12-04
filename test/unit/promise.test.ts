@@ -1,11 +1,11 @@
 import assert from 'assert';
 import fs from 'fs';
+import { safeRm } from 'fs-remove-compat';
 import installModule from 'install-module-linked';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
 import Queue from 'queue-cb';
-import rimraf2 from 'rimraf2';
 import url from 'url';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
@@ -30,11 +30,11 @@ describe('install-module-linked (promise)', () => {
   describe('setup tests', () => {
     beforeEach((cb) => {
       const queue = new Queue();
-      queue.defer(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+      queue.defer((cb) => safeRm(TMP_DIR, cb));
       queue.defer(mkdirp.bind(null, NODE_MODULES));
       queue.await(cb);
     });
-    after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+    after((cb) => safeRm(TMP_DIR, cb));
 
     it('install with version', async () => {
       await installModule('resolve-once@1.0.0', NODE_MODULES, { cachePath: CACHE_DIR });
