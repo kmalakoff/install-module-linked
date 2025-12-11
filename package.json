@@ -51,9 +51,9 @@
   },
   "dependencies": {
     "cross-spawn-cb": "^2.4.10",
-    "exit": "^0.1.2",
+    "exit-compat": "^1.0.0",
     "fs-remove-compat": "^0.2.1",
-    "function-exec-sync": "^1.4.14",
+    "function-exec-sync": "^1.5.1",
     "getopts-compat": "^2.2.6",
     "homedir-polyfill": "^1.0.3",
     "mkdirp-classic": "^0.5.3",
@@ -64,8 +64,8 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^24.10.2",
-    "node-version-use": "^1.9.9",
+    "@types/node": "^25.0.0",
+    "node-version-use": "^2.1.0",
     "pinkie-promise": "^2.0.1",
     "ts-dev-stack": "^1.21.2",
     "tsds-config": "^0.2.0"
