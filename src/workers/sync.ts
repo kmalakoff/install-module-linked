@@ -8,6 +8,8 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 // Worker MUST always load from dist/cjs/ for old Node compatibility (works from both cjs and esm)
 const workerPath = path.join(__dirname, '..', '..', 'cjs', 'workers', 'async.js');
 
+let functionExec = null; // break dependencies
 export default function installModuleSync(installString: string, nodeModulesPath: string, options?: object): string | undefined {
-  return _require('function-exec-sync')({ callbacks: true }, workerPath, installString, nodeModulesPath, options) as string | undefined;
+  if (!functionExec) functionExec = _require('function-exec-sync');
+  return functionExec({ callbacks: true }, workerPath, installString, nodeModulesPath, options) as string | undefined;
 }
