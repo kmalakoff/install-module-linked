@@ -12,8 +12,11 @@ const major = +process.versions.node.split('.')[0];
 
 type InstallCallback = (err: Error | null, result?: unknown) => void;
 
-let execPath: string | null = null;
+// Worker MUST always load from dist/cjs/ for old Node compatibility
+const workerPath = path.join(__dirname, '..', '..', 'cjs', 'lib', 'install.js');
 
+let execPath: string | null = null;
+let functionExec = null; // break dependencies
 export default function install(specifier: string, dest: string, callback: InstallCallback): void {
   if (major > 0) {
     spawn('npm', ['install', specifier], { cwd: dest }, callback);
@@ -30,11 +33,10 @@ export default function install(specifier: string, dest: string, callback: Insta
   }
 
   try {
+    if (!functionExec) functionExec = _require('function-exec-sync');
     const installPath = isWindows ? path.join(execPath, '..') : path.join(execPath, '..', '..');
     const options = spawnOptions(installPath, { execPath, callbacks: true } as Parameters<typeof spawnOptions>[1]);
-    // Worker MUST always load from dist/cjs/ for old Node compatibility
-    const workerPath = path.join(__dirname, '..', 'cjs', 'lib', 'install.js');
-    const res = _require('function-exec-sync')(options, workerPath, specifier, dest);
+    const res = functionExec(options, workerPath, specifier, dest);
     callback(null, res);
   } catch (err) {
     callback(err as Error);
