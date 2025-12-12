@@ -50,7 +50,7 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "cross-spawn-cb": "^2.4.12",
+    "cross-spawn-cb": "^2.4.13",
     "exit-compat": "^1.0.2",
     "fs-remove-compat": "^0.2.2",
     "function-exec-sync": "^1.5.4",
