@@ -6,7 +6,7 @@ import Queue from 'queue-cb';
 import tempSuffix from 'temp-suffix';
 import type { EnsureCachedCallback } from '../types.ts';
 import getSpecifier from './getSpecifier.ts';
-import install from './install.cjs';
+import install from './install.ts';
 import parse from './parseInstallString.ts';
 import renameWithFallback from './renameWithFallback.ts';
 
