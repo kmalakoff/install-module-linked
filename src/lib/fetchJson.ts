@@ -5,6 +5,7 @@ const minor = +process.versions.node.split('.')[1];
 const noHTTPS = major === 0 && (minor <= 8 || minor === 12);
 
 let execPath: string | null = null;
+let functionExec = null; // break dependencies
 export default function fetchJson(url, callback) {
   if (noHTTPS) {
     // Node 0.8/0.12: delegate to newer Node (same pattern as install.cjs)
@@ -17,7 +18,8 @@ export default function fetchJson(url, callback) {
       }
     }
     try {
-      const result = require('function-exec-sync')({ execPath, callbacks: true }, __filename, url);
+      if (!functionExec) functionExec = require('function-exec-sync');
+      const result = functionExec({ execPath, callbacks: true }, __filename, url);
       callback(null, result);
     } catch (err) {
       callback(err as Error);
@@ -39,7 +41,7 @@ export default function fetchJson(url, callback) {
         return callback(new Error(`HTTP ${res.statusCode}`));
       }
 
-      var data = '';
+      let data = '';
       res.setEncoding('utf8');
       res.on('data', (chunk) => {
         data += chunk;
