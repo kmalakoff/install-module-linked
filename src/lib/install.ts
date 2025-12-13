@@ -20,7 +20,7 @@ let functionExec = null; // break dependencies
 export default function install(specifier: string, dest: string, callback: InstallCallback): void {
   if (major > 0) {
     // Add diagnostic logging for npm install issues
-    const child = spawn('npm', ['install', specifier], { cwd: dest }, (err, result) => {
+    spawn('npm', ['install', specifier], { cwd: dest }, (err, result) => {
       if (err) {
         console.log(`[DIAGNOSTIC] npm install failed for ${specifier} in ${dest}:`, err.message);
         if (result) {
@@ -29,16 +29,6 @@ export default function install(specifier: string, dest: string, callback: Insta
       }
       callback(err, result);
     });
-
-    // Capture stdout/stderr for additional diagnostics (only if child process is returned)
-    if (child && typeof child === 'object' && 'on' in child) {
-      child.stdout?.on('data', (data) => {
-        console.log(`[npm stdout] ${data}`);
-      });
-      child.stderr?.on('data', (data) => {
-        console.log(`[npm stderr] ${data}`);
-      });
-    }
     return;
   }
 
