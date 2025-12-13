@@ -67,6 +67,7 @@
     "@types/node": "^25.0.1",
     "node-version-use": "^2.1.6",
     "pinkie-promise": "^2.0.1",
+    "resolve-once": "^1.0.0",
     "ts-dev-stack": "^1.21.3",
     "tsds-config": "^0.2.2"
   },
