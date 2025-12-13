@@ -26,8 +26,30 @@ export default function ensureCached(installString: string, cachePath: string, c
       queue.defer(mkdirp.bind(null, tmp));
       queue.defer(fs.writeFile.bind(null, path.join(tmp, 'package.json'), '{}', 'utf8'));
       queue.defer(install.bind(null, specifier, tmp));
-      queue.defer((cb) => renameWithFallback(tmpModulePath, cachedAt, cb));
-      queue.defer((cb) => renameWithFallback(path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules'), cb));
+      queue.defer((cb) => {
+        // Add diagnostic logging for rename issues in Node 6.x
+        renameWithFallback(tmpModulePath, cachedAt, (err) => {
+          if (err) {
+            console.log(`[DIAGNOSTIC] renameWithFallback failed for ${tmpModulePath} -> ${cachedAt}:`, err.message);
+            console.log('[DIAGNOSTIC] Source exists:', fs.existsSync(tmpModulePath));
+            console.log('[DIAGNOSTIC] Dest exists:', fs.existsSync(cachedAt));
+            console.log('[DIAGNOSTIC] tmp dir contents:', fs.readdirSync(tmp).join(', '));
+            if (fs.existsSync(path.join(tmp, 'node_modules'))) {
+              console.log('[DIAGNOSTIC] node_modules contents:', fs.readdirSync(path.join(tmp, 'node_modules')).join(', '));
+            }
+          }
+          cb(err);
+        });
+      });
+      queue.defer((cb) => {
+        // Add diagnostic logging for node_modules rename
+        renameWithFallback(path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules'), (err) => {
+          if (err) {
+            console.log('[DIAGNOSTIC] renameWithFallback failed for node_modules:', err.message);
+          }
+          cb(err);
+        });
+      });
       queue.await((err) => {
         // clear up whether installed or not
         safeRm(tmp, () => (err ? callback(err) : callback(null, cachedAt)));

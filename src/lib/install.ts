@@ -19,7 +19,28 @@ let execPath: string | null = null;
 let functionExec = null; // break dependencies
 export default function install(specifier: string, dest: string, callback: InstallCallback): void {
   if (major > 0) {
-    spawn('npm', ['install', specifier], { cwd: dest }, callback);
+    // Add diagnostic logging for npm install issues
+    const child = spawn('npm', ['install', specifier], { cwd: dest }, (err, result) => {
+      if (err) {
+        console.log(`[DIAGNOSTIC] npm install failed for ${specifier} in ${dest}:`, err.message);
+        if (result) {
+          console.log('[DIAGNOSTIC] npm install result:', typeof result === 'object' ? JSON.stringify(result) : String(result));
+        }
+      }
+      callback(err, result);
+    });
+
+    // Capture stdout/stderr for additional diagnostics
+    if (child && child.stdout) {
+      child.stdout.on('data', (data) => {
+        console.log(`[npm stdout] ${data}`);
+      });
+    }
+    if (child && child.stderr) {
+      child.stderr.on('data', (data) => {
+        console.log(`[npm stderr] ${data}`);
+      });
+    }
     return;
   }
 
