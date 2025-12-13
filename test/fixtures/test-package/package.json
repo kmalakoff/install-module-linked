@@ -1,0 +1,14 @@
+{
+  "name": "test-package",
+  "version": "1.0.0",
+  "description": "Test package for install-module-linked",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "test"
+  ],
+  "author": "install-module-linked",
+  "license": "MIT"
+}
