@@ -11,16 +11,17 @@ import parse from './parseInstallString.ts';
 import renameWithFallback from './renameWithFallback.ts';
 
 export default function ensureCached(installString: string, cachePath: string, callback: EnsureCachedCallback) {
-  console.log(`[DIAGNOSTIC] ensureCached called with installString: ${installString}, cachePath: ${cachePath}`);
+  const startTime = Date.now();
+  console.log(`[DIAGNOSTIC] ensureCached called with installString: ${installString}, cachePath: ${cachePath} at ${new Date().toISOString()}`);
   getSpecifier(installString, (err, specifier) => {
     if (err) {
-      console.log(`[DIAGNOSTIC] getSpecifier error:`, err.message);
+      console.log(`[DIAGNOSTIC] getSpecifier error after ${Date.now() - startTime}ms:`, err.message);
       return callback(err);
     }
-    console.log(`[DIAGNOSTIC] getSpecifier result: ${specifier}`);
+    console.log(`[DIAGNOSTIC] getSpecifier result after ${Date.now() - startTime}ms: ${specifier}`);
     const cachedAt = path.join(cachePath, specifier);
     const { name } = parse(installString);
-    console.log(`[DIAGNOSTIC] parsed name: ${name}, cachedAt: ${cachedAt}`);
+    console.log(`[DIAGNOSTIC] parsed name: ${name}, cachedAt: ${cachedAt} after ${Date.now() - startTime}ms`);
 
     fs.stat(cachedAt, (err?: Error) => {
       if (!err) return callback(null, cachedAt); // already cached
@@ -57,8 +58,12 @@ export default function ensureCached(installString: string, cachePath: string, c
         });
       });
       queue.await((err) => {
+        console.log(`[DIAGNOSTIC] queue completed after ${Date.now() - startTime}ms with error: ${!!err}`);
         // clear up whether installed or not
-        safeRm(tmp, () => (err ? callback(err) : callback(null, cachedAt)));
+        safeRm(tmp, () => {
+          console.log(`[DIAGNOSTIC] safeRm completed after ${Date.now() - startTime}ms with error: ${!!err}`);
+          err ? callback(err) : callback(null, cachedAt);
+        });
       });
     });
   });
