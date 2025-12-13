@@ -30,14 +30,12 @@ export default function install(specifier: string, dest: string, callback: Insta
       callback(err, result);
     });
 
-    // Capture stdout/stderr for additional diagnostics
-    if (child && child.stdout) {
-      child.stdout.on('data', (data) => {
+    // Capture stdout/stderr for additional diagnostics (only if child process is returned)
+    if (child && typeof child === 'object' && 'on' in child) {
+      child.stdout?.on('data', (data) => {
         console.log(`[npm stdout] ${data}`);
       });
-    }
-    if (child && child.stderr) {
-      child.stderr.on('data', (data) => {
+      child.stderr?.on('data', (data) => {
         console.log(`[npm stderr] ${data}`);
       });
     }
