@@ -11,10 +11,16 @@ import parse from './parseInstallString.ts';
 import renameWithFallback from './renameWithFallback.ts';
 
 export default function ensureCached(installString: string, cachePath: string, callback: EnsureCachedCallback) {
+  console.log(`[DIAGNOSTIC] ensureCached called with installString: ${installString}, cachePath: ${cachePath}`);
   getSpecifier(installString, (err, specifier) => {
-    if (err) return callback(err);
+    if (err) {
+      console.log(`[DIAGNOSTIC] getSpecifier error:`, err.message);
+      return callback(err);
+    }
+    console.log(`[DIAGNOSTIC] getSpecifier result: ${specifier}`);
     const cachedAt = path.join(cachePath, specifier);
     const { name } = parse(installString);
+    console.log(`[DIAGNOSTIC] parsed name: ${name}, cachedAt: ${cachedAt}`);
 
     fs.stat(cachedAt, (err?: Error) => {
       if (!err) return callback(null, cachedAt); // already cached

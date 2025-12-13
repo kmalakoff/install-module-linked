@@ -33,21 +33,33 @@ export default function install(specifier: string, dest: string, callback: Insta
   }
 
   if (!execPath) {
+    console.log(`[DIAGNOSTIC] Checking execPath for Node ${process.versions.node}`);
     const satisfiesSemverSync = _require('node-exec-path').satisfiesSemverSync;
     execPath = satisfiesSemverSync('>0.12'); // must be more than node 0.12
+    console.log(`[DIAGNOSTIC] execPath result: ${execPath}`);
     if (!execPath) {
-      callback(new Error('install-module-linked a version of node >0.12 to use npm install'));
+      const error = new Error('install-module-linked requires a version of node >0.12 to use npm install');
+      console.log(`[DIAGNOSTIC] execPath not found, returning error:`, error.message);
+      callback(error);
       return;
     }
   }
 
   try {
-    if (!functionExec) functionExec = _require('function-exec-sync');
+    console.log(`[DIAGNOSTIC] Using function-exec-sync path for Node ${process.versions.node}`);
+    if (!functionExec) {
+      console.log(`[DIAGNOSTIC] Loading function-exec-sync`);
+      functionExec = _require('function-exec-sync');
+    }
     const installPath = isWindows ? path.join(execPath, '..') : path.join(execPath, '..', '..');
+    console.log(`[DIAGNOSTIC] installPath: ${installPath}`);
     const options = spawnOptions(installPath, { execPath, callbacks: true } as Parameters<typeof spawnOptions>[1]);
+    console.log(`[DIAGNOSTIC] spawnOptions result:`, JSON.stringify(options));
     const res = functionExec(options, workerPath, specifier, dest);
+    console.log(`[DIAGNOSTIC] functionExec result:`, typeof res === 'object' ? JSON.stringify(res) : String(res));
     callback(null, res);
   } catch (err) {
+    console.log(`[DIAGNOSTIC] functionExec error:`, (err as Error).message);
     callback(err as Error);
   }
 }
