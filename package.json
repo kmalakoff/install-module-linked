@@ -50,8 +50,8 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "cross-spawn-cb": "^2.4.13",
-    "exit-compat": "^1.0.3",
+    "cross-spawn-cb": "^2.4.14",
+    "exit-compat": "^1.0.4",
     "fs-remove-compat": "^0.2.3",
     "function-exec-sync": "^1.5.5",
     "getopts-compat": "^2.2.6",
@@ -64,11 +64,11 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^25.0.1",
-    "node-version-use": "^2.1.5",
+    "@types/node": "^25.0.2",
+    "node-version-use": "^2.1.7",
     "pinkie-promise": "^2.0.1",
     "ts-dev-stack": "^1.21.3",
-    "tsds-config": "^0.2.1"
+    "tsds-config": "^0.2.2"
   },
   "engines": {
     "node": ">=0.8"
