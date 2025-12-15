@@ -3,14 +3,13 @@ import Module from 'module';
 import { spawnOptions } from 'node-version-utils';
 import path from 'path';
 import url from 'url';
+import type { InstallCallback } from '../types.ts';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 
 const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE || '');
 const major = +process.versions.node.split('.')[0];
-
-type InstallCallback = (err: Error | null, result?: unknown) => void;
 
 // Worker MUST always load from dist/cjs/ for old Node compatibility
 const workerPath = path.join(__dirname, '..', '..', 'cjs', 'lib', 'install.js');
@@ -19,7 +18,9 @@ let execPath: string | null = null;
 let functionExec = null; // break dependencies
 export default function install(specifier: string, dest: string, callback: InstallCallback): void {
   if (major > 0) {
-    spawn('npm', ['install', specifier], { cwd: dest }, callback);
+    spawn('npm', ['install', specifier], { cwd: dest }, (err) => {
+      err ? callback(err) : callback(null, path.join(dest, ...specifier.split('/')));
+    });
     return;
   }
 
