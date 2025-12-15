@@ -52,7 +52,7 @@
   "dependencies": {
     "cross-spawn-cb": "^2.4.14",
     "exit-compat": "^1.0.4",
-    "fs-remove-compat": "^0.2.3",
+    "fs-remove-compat": "^0.2.4",
     "function-exec-sync": "^1.5.5",
     "getopts-compat": "^2.2.6",
     "homedir-polyfill": "^1.0.3",
