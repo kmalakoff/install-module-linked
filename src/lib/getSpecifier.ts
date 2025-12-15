@@ -1,5 +1,5 @@
+import { getContent } from 'get-file-compat';
 import type { GetScopedSpecifiedCallback } from '../types.ts';
-import fetchJson from './fetchJson.ts';
 import parseInstallString from './parseInstallString.ts';
 
 interface JSONPackage {
@@ -12,8 +12,13 @@ export default function getSpecifier(installString: string, callback: GetScopedS
 
   // URL-encode the package name (handles scoped packages: @scope/pkg -> @scope%2Fpkg)
   const encodedName = encodeURIComponent(name).replace(/%40/g, '@');
-  fetchJson(`https://registry.npmjs.org/${encodedName}/latest`, (err, data) => {
+  getContent(`https://registry.npmjs.org/${encodedName}/latest`, 'utf8', (err, data: string) => {
     if (err) return callback(err);
-    callback(null, `${name}@${(data as JSONPackage).version}`);
+    try {
+      const json = JSON.parse(data);
+      callback(null, `${name}@${(json as JSONPackage).version}`);
+    } catch (err) {
+      callback(err as Error);
+    }
   });
 }

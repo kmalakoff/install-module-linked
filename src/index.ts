@@ -3,6 +3,7 @@ import worker from './workers/async.ts';
 import workerSync from './workers/sync.ts';
 
 export { default as clear } from './lib/clear.ts';
+export { default as install } from './lib/install.ts';
 export { default as parseInstallString } from './lib/parseInstallString.ts';
 export type * from './types.ts';
 
@@ -21,5 +22,3 @@ export function sync(installString: string, nodeModulesPath: string, options?: I
   options = options || {};
   return workerSync(installString, nodeModulesPath, options);
 }
-
-export { default as install } from './lib/install.ts';
