@@ -12,10 +12,10 @@ export default function getSpecifier(installString: string, callback: GetScopedS
 
   // URL-encode the package name (handles scoped packages: @scope/pkg -> @scope%2Fpkg)
   const encodedName = encodeURIComponent(name).replace(/%40/g, '@');
-  getContent(`https://registry.npmjs.org/${encodedName}/latest`, 'utf8', (err, data: string) => {
+  getContent(`https://registry.npmjs.org/${encodedName}/latest`, 'utf8', (err, res) => {
     if (err) return callback(err);
     try {
-      const json = JSON.parse(data);
+      const json = JSON.parse(res.content);
       callback(null, `${name}@${(json as JSONPackage).version}`);
     } catch (err) {
       callback(err as Error);
