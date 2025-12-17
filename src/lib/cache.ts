@@ -26,6 +26,14 @@ export default function ensureCached(installString: string, cachePath: string, c
       queue.defer(mkdirp.bind(null, tmp));
       queue.defer(fs.writeFile.bind(null, path.join(tmp, 'package.json'), '{}', 'utf8'));
       queue.defer(install.bind(null, specifier, tmp));
+      queue.defer((cb) => {
+        // Verify npm actually created the package directory - npm may silently skip
+        // installation (exit 0) when platform doesn't match (os/cpu/libc fields)
+        fs.stat(tmpModulePath, (err) => {
+          if (err) return cb(new Error(`Package directory not created by npm. This may happen when the package has platform restrictions (os/cpu/libc) that don't match the current system: ${tmpModulePath}`));
+          cb();
+        });
+      });
       queue.defer((cb) => renameWithFallback(tmpModulePath, cachedAt, cb));
       queue.defer((cb) => renameWithFallback(path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules'), cb));
       queue.await((err) => {
