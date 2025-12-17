@@ -24,7 +24,7 @@ export default function installModule(installString: string, nodeModulesPath: st
     cache(installString, cachePath, (err, cachedAt) => {
       if (err) {
         console.log(`Could not install: ${installString}. Message: ${err.message}`);
-        return callback();
+        return callback(err);
       }
 
       // Use temp symlink + atomic rename to avoid cross-process race conditions
