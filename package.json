@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "cross-spawn-cb": "^2.0.0",
-    "exit-compat": "^1.0.3",
+    "exit-compat": "^1.0.0",
     "fs-remove-compat": "^1.0.0",
     "get-file-compat": "^2.0.0",
     "getopts-compat": "^2.2.6",
