@@ -1,6 +1,6 @@
 {
   "name": "install-module-linked",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Installs and symlinks a module into node_modules",
   "keywords": [
     "npm",
