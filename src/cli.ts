@@ -31,7 +31,7 @@ function printHelp(name: string): void {
   console.log('  -h, --help       Print this help message');
 }
 
-export default (argv: string[], name?: string): undefined => {
+export default (argv: string[], name?: string): void => {
   name = name || 'iml';
   const options = getopts(argv, {
     alias: { version: 'v', help: 'h' },

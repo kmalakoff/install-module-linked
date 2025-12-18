@@ -9,7 +9,7 @@ const CLI_PATH = path.join(__dirname, '..', '..', 'bin', 'cli.js');
 type CliResult = { stdout: string; stderr: string; code: number | null };
 type CliCallback = (err: Error | null, result?: CliResult) => void;
 
-function runCli(args: string[], callback: CliCallback): void {
+function runCli(args: string[], callback: CliCallback) {
   const proc = cp.spawn(process.execPath, [CLI_PATH].concat(args), {
     stdio: ['pipe', 'pipe', 'pipe'],
   });
