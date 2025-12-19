@@ -16,7 +16,7 @@ describe('install-module-linked (callback)', () => {
   describe('setup tests', () => {
     beforeEach((cb) => {
       const queue = new Queue();
-      queue.defer((cb) => safeRm(TMP_DIR, cb));
+      queue.defer(safeRm.bind(null, TMP_DIR));
       queue.defer(mkdirp.bind(null, NODE_MODULES));
       queue.await(cb);
     });

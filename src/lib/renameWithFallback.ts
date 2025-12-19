@@ -5,7 +5,8 @@ export default function renameWithFallback(src: string, dest: string, callback: 
     if (!err) return callback();
 
     // Another process may have already created dest - check if it exists
-    if (err.code === 'EEXIST' || err.code === 'ENOTEMPTY') {
+    // On Windows, concurrent renames to the same destination throw EPERM
+    if (err.code === 'EEXIST' || err.code === 'ENOTEMPTY' || err.code === 'EPERM') {
       fs.stat(dest, (statErr) => {
         if (!statErr) return callback(); // dest exists, race was won by another process
         callback(err); // dest doesn't exist, actual error
