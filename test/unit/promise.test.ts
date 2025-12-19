@@ -30,7 +30,7 @@ describe('install-module-linked (promise)', () => {
   describe('setup tests', () => {
     beforeEach((cb) => {
       const queue = new Queue();
-      queue.defer((cb) => safeRm(TMP_DIR, cb));
+      queue.defer(safeRm.bind(null, TMP_DIR));
       queue.defer(mkdirp.bind(null, NODE_MODULES));
       queue.await(cb);
     });
@@ -50,6 +50,14 @@ describe('install-module-linked (promise)', () => {
       const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'resolve-once', 'package.json'), 'utf8'));
       assert.equal(packageJSON.name, 'resolve-once');
       assert.ok(packageJSON.version.length);
+    });
+
+    it('install scoped package', async () => {
+      await installModule('@sinonjs/commons@1.8.0', NODE_MODULES, { cachePath: CACHE_DIR });
+      assert.ok(fs.existsSync(path.join(NODE_MODULES, '@sinonjs', 'commons')));
+      const packageJSON = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, '@sinonjs', 'commons', 'package.json'), 'utf8'));
+      assert.equal(packageJSON.name, '@sinonjs/commons');
+      assert.equal(packageJSON.version, '1.8.0');
     });
 
     it('link multiple (serial)', async () => {
