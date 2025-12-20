@@ -11,17 +11,13 @@ export default function installModule(installString: string, nodeModulesPath: st
 export default function installModule(installString: string, nodeModulesPath: string, options: InstallOptions, callback: InstallCallback): void;
 export default function installModule(installString: string, nodeModulesPath: string, options?: InstallOptions): Promise<string>;
 export default function installModule(installString: string, nodeModulesPath: string, options?: InstallOptions | InstallCallback, callback?: InstallCallback): void | Promise<string> {
-  if (typeof options === 'function') {
-    callback = options as InstallCallback;
-    options = {};
-  }
-  options = options || {};
+  callback = typeof options === 'function' ? options : callback;
+  options = typeof options === 'function' ? {} : ((options || {}) as InstallOptions);
 
   if (typeof callback === 'function') return worker(installString, nodeModulesPath, options, callback);
-  return new Promise((resolve, reject) => worker(installString, nodeModulesPath, options as InstallOptions, (err, dest) => (err ? reject(err) : resolve(dest))));
+  return new Promise((resolve, reject) => worker(installString, nodeModulesPath, options, (err, dest) => (err ? reject(err) : resolve(dest))));
 }
 
 export function sync(installString: string, nodeModulesPath: string, options?: InstallOptions): string | undefined {
-  options = options || {};
-  return workerSync(installString, nodeModulesPath, options);
+  return workerSync(installString, nodeModulesPath, options || {});
 }
