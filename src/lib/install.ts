@@ -14,7 +14,9 @@ function run(specifier: string, dest: string, callback: InstallCallback): void {
   });
 }
 
-const worker = major > 0 ? run : bind('>0.12', workerPath, { callbacks: true });
+type installFunction = (specifier: string, dest: string, callback: InstallCallback) => void;
+
+const worker = (major > 0 ? run : bind('>0.12', workerPath, { callbacks: true })) as installFunction;
 
 export default function install(specifier: string, dest: string, callback: InstallCallback): void {
   worker(specifier, dest, callback);
