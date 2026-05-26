@@ -21,14 +21,14 @@ const LOCK_OPTIONS = {
 export default function ensureCached(installString: string, cachePath: string, callback: EnsureCachedCallback) {
   getSpecifier(installString, (err, specifier) => {
     if (err) return callback(err);
-    const cachedAt = path.join(cachePath, specifier);
+    const cachedAt = path.join(cachePath, specifier!);
     const lockPath = `${cachedAt}.lock`;
     const readyPath = path.join(cachedAt, '.ready');
     const { name } = parse(installString);
 
     // Check if already cached AND complete (fast path, no lock needed)
-    fs.stat(readyPath, (readyErr?: Error) => {
-      if (!readyErr) return callback(null, cachedAt); // Valid cache
+    fs.stat(readyPath, (readyErr: NodeJS.ErrnoException | null) => {
+      if (!readyErr) return callback(undefined, cachedAt); // Valid cache
 
       // Not cached or incomplete - acquire lock and install
       doLockedInstall();
@@ -36,14 +36,14 @@ export default function ensureCached(installString: string, cachePath: string, c
 
     function doLockedInstall() {
       // Ensure lock file's parent directory exists (handles scoped packages like @scope/pkg)
-      mkdirp(path.dirname(lockPath), (mkdirErr) => {
+      mkdirp(path.dirname(lockPath), (mkdirErr: Error | null) => {
         if (mkdirErr) return callback(mkdirErr);
 
         const startTime = Date.now();
 
         // Retry loop for Windows EPERM - treat it like EEXIST (lock held by another process)
         function tryLock(cb: (err?: Error | null) => void) {
-          lockfile.lock(lockPath, LOCK_OPTIONS, (lockErr) => {
+          lockfile.lock(lockPath, { ...LOCK_OPTIONS }, (lockErr: Error | null) => {
             if (lockErr && (lockErr as NodeJS.ErrnoException).code === 'EPERM' && Date.now() - startTime < LOCK_OPTIONS.wait) {
               setTimeout(() => tryLock(cb), LOCK_OPTIONS.pollPeriod);
               return;
@@ -61,7 +61,7 @@ export default function ensureCached(installString: string, cachePath: string, c
           }
 
           // Re-check cache (another process may have completed while we waited for lock)
-          fs.stat(readyPath, (readyErr?: Error) => {
+          fs.stat(readyPath, (readyErr: NodeJS.ErrnoException | null) => {
             if (!readyErr) return done(); // Cache appeared while we waited
 
             // Clean up any incomplete cache before installing
@@ -79,9 +79,9 @@ export default function ensureCached(installString: string, cachePath: string, c
       const tmpModulePath = path.join(tmp, 'node_modules', ...name.split('/'));
 
       const queue = new Queue(1);
-      queue.defer(mkdirp.bind(null, tmp));
-      queue.defer(fs.writeFile.bind(null, path.join(tmp, 'package.json'), '{}', 'utf8'));
-      queue.defer(install.bind(null, specifier, tmp));
+      queue.defer((cb) => mkdirp(tmp, (err) => cb(err ?? undefined)));
+      queue.defer((cb) => fs.writeFile(path.join(tmp, 'package.json'), '{}', 'utf8', (err) => cb(err ?? undefined)));
+      queue.defer(install.bind(null, specifier!, tmp));
       queue.defer((qcb) => {
         // Verify npm actually created the package directory - npm may silently skip
         // installation (exit 0) when platform doesn't match (os/cpu/libc fields)
@@ -93,7 +93,7 @@ export default function ensureCached(installString: string, cachePath: string, c
       queue.defer(renameWithFallback.bind(null, tmpModulePath, cachedAt));
       queue.defer(renameWithFallback.bind(null, path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules')));
       // Write .ready marker after both renames succeed
-      queue.defer(fs.writeFile.bind(null, readyPath, '', 'utf8'));
+      queue.defer((cb) => fs.writeFile(readyPath, '', 'utf8', (err) => cb(err ?? undefined)));
       queue.await((queueErr) => {
         // Clean up temp directory whether installed or not
         safeRm(tmp, () => cb(queueErr));

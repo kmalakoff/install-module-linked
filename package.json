@@ -63,6 +63,7 @@
     "temp-suffix": "^1.0.10"
   },
   "devDependencies": {
+    "@types/lockfile": "^1.0.4",
     "@types/mocha": "*",
     "@types/node": "*",
     "node-version-use": "*",

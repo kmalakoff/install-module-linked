@@ -15,7 +15,7 @@ export default function installModule(installString: string, nodeModulesPath: st
   options = typeof options === 'function' ? {} : ((options || {}) as InstallOptions);
 
   if (typeof callback === 'function') return worker(installString, nodeModulesPath, options, callback);
-  return new Promise((resolve, reject) => worker(installString, nodeModulesPath, options, (err, dest) => (err ? reject(err) : resolve(dest))));
+  return new Promise((resolve, reject) => worker(installString, nodeModulesPath, options, (err, dest) => (err ? reject(err) : resolve(dest!))));
 }
 
 export function sync(installString: string, nodeModulesPath: string, options?: InstallOptions): string | undefined {

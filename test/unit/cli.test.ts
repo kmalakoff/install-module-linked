@@ -33,7 +33,7 @@ describe('cli', () => {
   describe('--version', () => {
     it('prints version with --version flag', (done) => {
       runCli(['--version'], (err, result) => {
-        if (err) return done(err);
+        if (err || !result) return done(err ?? new Error('No result'));
         assert.ok(result.stdout.match(/^\d+\.\d+\.\d+$/), 'Version should be semver format');
         assert.equal(result.code, 0);
         done();
@@ -42,7 +42,7 @@ describe('cli', () => {
 
     it('prints version with -v flag', (done) => {
       runCli(['-v'], (err, result) => {
-        if (err) return done(err);
+        if (err || !result) return done(err ?? new Error('No result'));
         assert.ok(result.stdout.match(/^\d+\.\d+\.\d+$/), 'Version should be semver format');
         assert.equal(result.code, 0);
         done();
@@ -53,7 +53,7 @@ describe('cli', () => {
   describe('--help', () => {
     it('prints help with --help flag', (done) => {
       runCli(['--help'], (err, result) => {
-        if (err) return done(err);
+        if (err || !result) return done(err ?? new Error('No result'));
         assert.ok(result.stdout.indexOf('Usage:') >= 0, 'Help should include usage');
         assert.ok(result.stdout.indexOf('Commands:') >= 0, 'Help should include commands');
         assert.ok(result.stdout.indexOf('Options:') >= 0, 'Help should include options');
@@ -67,7 +67,7 @@ describe('cli', () => {
 
     it('prints help with -h flag', (done) => {
       runCli(['-h'], (err, result) => {
-        if (err) return done(err);
+        if (err || !result) return done(err ?? new Error('No result'));
         assert.ok(result.stdout.indexOf('Usage:') >= 0, 'Help should include usage');
         assert.equal(result.code, 0);
         done();
@@ -78,7 +78,7 @@ describe('cli', () => {
   describe('error handling', () => {
     it('shows error for missing command', (done) => {
       runCli([], (err, result) => {
-        if (err) return done(err);
+        if (err || !result) return done(err ?? new Error('No result'));
         assert.ok(result.stdout.indexOf('Missing command') >= 0, 'Should mention missing command');
         assert.ok(result.stdout.indexOf('--help') >= 0, 'Should suggest --help');
         assert.notEqual(result.code, 0);
@@ -88,7 +88,7 @@ describe('cli', () => {
 
     it('shows error for unrecognized command', (done) => {
       runCli(['unknown'], (err, result) => {
-        if (err) return done(err);
+        if (err || !result) return done(err ?? new Error('No result'));
         assert.ok(result.stdout.indexOf('Unrecognized command') >= 0, 'Should mention unrecognized command');
         assert.ok(result.stdout.indexOf('--help') >= 0, 'Should suggest --help');
         assert.notEqual(result.code, 0);
