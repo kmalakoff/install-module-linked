@@ -16,8 +16,8 @@ describe('install-module-linked (sync)', () => {
   describe('setup tests', () => {
     beforeEach((cb) => {
       const queue = new Queue();
-      queue.defer((cb) => safeRm(TMP_DIR, (err) => cb(err ?? undefined)));
-      queue.defer((cb) => (mkdirp as unknown as (path: string, cb: (err?: Error) => void) => void)(NODE_MODULES, cb));
+      queue.defer((cb) => safeRm(TMP_DIR, (err) => cb(err)));
+      queue.defer((cb) => (mkdirp as unknown as (path: string, cb: (err?: Error | null) => void) => void)(NODE_MODULES, cb));
       queue.await(cb);
     });
     after((cb) => safeRm(TMP_DIR, cb));

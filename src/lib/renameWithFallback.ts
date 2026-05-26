@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-export default function renameWithFallback(src: string, dest: string, callback: (err?: Error) => void): void {
+export default function renameWithFallback(src: string, dest: string, callback: (err?: Error | null) => void): void {
   fs.rename(src, dest, (err) => {
     if (!err) return callback();
 

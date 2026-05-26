@@ -56,7 +56,7 @@ export default function ensureCached(installString: string, cachePath: string, c
           if (lockErr) return callback(lockErr);
 
           // Single exit point - always unlock before calling back
-          function done(err?: Error) {
+          function done(err?: Error | null) {
             lockfile.unlock(lockPath, () => callback(err, err ? undefined : cachedAt));
           }
 
@@ -74,13 +74,13 @@ export default function ensureCached(installString: string, cachePath: string, c
       });
     }
 
-    function doInstall(cb: (err?: Error) => void) {
+    function doInstall(cb: (err?: Error | null) => void) {
       const tmp = `${cachedAt}-${tempSuffix()}`;
       const tmpModulePath = path.join(tmp, 'node_modules', ...name.split('/'));
 
       const queue = new Queue(1);
-      queue.defer((cb) => mkdirp(tmp, (err) => cb(err ?? undefined)));
-      queue.defer((cb) => fs.writeFile(path.join(tmp, 'package.json'), '{}', 'utf8', (err) => cb(err ?? undefined)));
+      queue.defer((cb) => mkdirp(tmp, (err) => cb(err)));
+      queue.defer((cb) => fs.writeFile(path.join(tmp, 'package.json'), '{}', 'utf8', (err) => cb(err)));
       queue.defer(install.bind(null, specifier!, tmp));
       queue.defer((qcb) => {
         // Verify npm actually created the package directory - npm may silently skip
@@ -93,7 +93,7 @@ export default function ensureCached(installString: string, cachePath: string, c
       queue.defer(renameWithFallback.bind(null, tmpModulePath, cachedAt));
       queue.defer(renameWithFallback.bind(null, path.join(tmp, 'node_modules'), path.join(cachedAt, 'node_modules')));
       // Write .ready marker after both renames succeed
-      queue.defer((cb) => fs.writeFile(readyPath, '', 'utf8', (err) => cb(err ?? undefined)));
+      queue.defer((cb) => fs.writeFile(readyPath, '', 'utf8', (err) => cb(err)));
       queue.await((queueErr) => {
         // Clean up temp directory whether installed or not
         safeRm(tmp, () => cb(queueErr));
