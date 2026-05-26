@@ -10,7 +10,7 @@ const workerPath = path.join(__dirname, '..', '..', 'cjs', 'lib', 'install.js');
 
 function run(specifier: string, dest: string, callback: InstallCallback): void {
   spawn('npm', ['install', specifier], { cwd: dest }, (err) => {
-    err ? callback(err) : callback(null, path.join(dest, ...specifier.split('/')));
+    err ? callback(err) : callback(undefined, path.join(dest, ...specifier.split('/')));
   });
 }
 
