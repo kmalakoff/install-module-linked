@@ -30,8 +30,8 @@ export default function installModule(installString: string, nodeModulesPath: st
       // Use temp symlink + atomic rename to avoid cross-process race conditions
       const tempDest = tempSuffix(dest);
       const queue = new Queue(1);
-      queue.defer((cb) => mkdirp(path.dirname(dest), (err) => cb(err ?? undefined)));
-      queue.defer((cb) => fs.symlink(cachedAt!, tempDest, symlinkType, (err) => cb(err ?? undefined)));
+      queue.defer((cb) => mkdirp(path.dirname(dest), (err) => cb(err)));
+      queue.defer((cb) => fs.symlink(cachedAt!, tempDest, symlinkType, (err) => cb(err)));
       queue.defer((cb) => {
         fs.rename(tempDest, dest, (err) => {
           // If rename fails because dest exists, another process won - that's ok
@@ -39,7 +39,7 @@ export default function installModule(installString: string, nodeModulesPath: st
             safeRm(tempDest, () => cb());
             return;
           }
-          cb(err ?? undefined);
+          cb(err);
         });
       });
       queue.await((err) => {
