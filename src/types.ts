@@ -1,6 +1,7 @@
 export interface CleanOptions {
   slient?: boolean;
   rmSync?: RmSyncFn;
+  homedir?: HomedirFn;
 }
 
 export type GetScopedSpecifiedCallback = (err?: Error | null, installSpecifier?: string) => void;

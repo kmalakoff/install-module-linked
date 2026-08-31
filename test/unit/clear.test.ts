@@ -12,6 +12,12 @@ describe('clear', () => {
     assert.deepEqual(removed, [DEFAULT_CACHE_PATH]);
   });
 
+  it('prefers the injected homedir', () => {
+    const removed: string[] = [];
+    clear({ rmSync: (p) => removed.push(p), homedir: () => '/custom/home' });
+    assert.deepEqual(removed, [path.join('/custom/home', '.iml')]);
+  });
+
   it('reports the cleaned path', () => {
     const lines: string[] = [];
     const originalLog = console.log;
