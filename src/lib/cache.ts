@@ -1,15 +1,14 @@
 import fs from 'fs';
-import { safeRm } from 'fs-remove-compat';
 import lockfile from 'lockfile';
-import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Queue from 'queue-cb';
 import tempSuffix from 'temp-suffix';
 import type { EnsureCachedCallback } from '../types.ts';
 import getSpecifier from './getSpecifier.ts';
-import install from './install.ts';
+import { run as install } from './install.ts';
 import parse from './parseInstallString.ts';
 import renameWithFallback from './renameWithFallback.ts';
+import type { ResolvedOptions } from './resolveOptions.ts';
 
 const LOCK_OPTIONS = {
   wait: 600000, // Wait up to 10 minutes for lock (npm installs can be slow)
@@ -18,9 +17,10 @@ const LOCK_OPTIONS = {
   retries: 3, // Retry 3 times on transient errors
 };
 
-export default function ensureCached(installString: string, cachePath: string, callback: EnsureCachedCallback) {
-  getSpecifier(installString, (err, specifier) => {
+export default function ensureCached(installString: string, cachePath: string, options: ResolvedOptions, callback: EnsureCachedCallback) {
+  getSpecifier(installString, options.fetchText, (err, specifier) => {
     if (err) return callback(err);
+    // biome-ignore lint/style/noNonNullAssertion: getSpecifier always sets the specifier when err is null
     const cachedAt = path.join(cachePath, specifier!);
     const lockPath = `${cachedAt}.lock`;
     const readyPath = path.join(cachedAt, '.ready');
@@ -36,7 +36,7 @@ export default function ensureCached(installString: string, cachePath: string, c
 
     function doLockedInstall() {
       // Ensure lock file's parent directory exists (handles scoped packages like @scope/pkg)
-      mkdirp(path.dirname(lockPath), (mkdirErr: Error | null) => {
+      options.mkdir(path.dirname(lockPath), (mkdirErr: Error | null) => {
         if (mkdirErr) return callback(mkdirErr);
 
         const startTime = Date.now();
@@ -65,7 +65,7 @@ export default function ensureCached(installString: string, cachePath: string, c
             if (!readyErr) return done(); // Cache appeared while we waited
 
             // Clean up any incomplete cache before installing
-            safeRm(cachedAt, (rmErr) => {
+            options.rm(cachedAt, (rmErr) => {
               if (rmErr) return done(rmErr);
               doInstall(done);
             });
@@ -79,9 +79,10 @@ export default function ensureCached(installString: string, cachePath: string, c
       const tmpModulePath = path.join(tmp, 'node_modules', ...name.split('/'));
 
       const queue = new Queue(1);
-      queue.defer((cb) => mkdirp(tmp, (err) => cb(err)));
+      queue.defer((cb) => options.mkdir(tmp, (err) => cb(err)));
       queue.defer((cb) => fs.writeFile(path.join(tmp, 'package.json'), '{}', 'utf8', (err) => cb(err)));
-      queue.defer(install.bind(null, specifier!, tmp));
+      // biome-ignore lint/style/noNonNullAssertion: getSpecifier always sets the specifier when err is null
+      queue.defer((cb) => install(specifier!, tmp, cb, options.spawn));
       queue.defer((qcb) => {
         // Verify npm actually created the package directory - npm may silently skip
         // installation (exit 0) when platform doesn't match (os/cpu/libc fields)
@@ -96,7 +97,7 @@ export default function ensureCached(installString: string, cachePath: string, c
       queue.defer((cb) => fs.writeFile(readyPath, '', 'utf8', (err) => cb(err)));
       queue.await((queueErr) => {
         // Clean up temp directory whether installed or not
-        safeRm(tmp, () => cb(queueErr));
+        options.rm(tmp, () => cb(queueErr));
       });
     }
   });

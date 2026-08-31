@@ -1,3 +1,4 @@
+import resolveOptions from './lib/resolveOptions.ts';
 import type { InstallCallback, InstallOptions } from './types.ts';
 import worker from './workers/async.ts';
 import workerSync from './workers/sync.ts';
@@ -19,5 +20,5 @@ export default function installModule(installString: string, nodeModulesPath: st
 }
 
 export function sync(installString: string, nodeModulesPath: string, options?: InstallOptions): string | undefined {
-  return workerSync(installString, nodeModulesPath, options || {});
+  return workerSync(installString, nodeModulesPath, resolveOptions(options || {}));
 }
