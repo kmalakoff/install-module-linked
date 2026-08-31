@@ -1,10 +1,9 @@
+// These tests reach the network: they install real packages from the npm registry.
 import assert from 'assert';
 import fs from 'fs';
 import { safeRm } from 'fs-remove-compat';
 import installModule from 'install-module-linked';
-import mkdirp from 'mkdirp-classic';
 import path from 'path';
-import Pinkie from 'pinkie-promise';
 import Queue from 'queue-cb';
 import url from 'url';
 
@@ -15,23 +14,11 @@ const NODE_MODULES = path.join(TMP_DIR, 'node_modules');
 const STRESS_COUNT = 10;
 
 describe('install-module-linked (promise)', () => {
-  (() => {
-    // patch and restore promise
-    if (typeof global === 'undefined') return;
-    const globalPromise = global.Promise;
-    before(() => {
-      global.Promise = Pinkie;
-    });
-    after(() => {
-      global.Promise = globalPromise;
-    });
-  })();
-
   describe('setup tests', () => {
     beforeEach((cb) => {
       const queue = new Queue();
       queue.defer((cb) => safeRm(TMP_DIR, (err) => cb(err)));
-      queue.defer((cb) => (mkdirp as unknown as (path: string, cb: (err?: Error | null) => void) => void)(NODE_MODULES, cb));
+      queue.defer((cb) => fs.mkdir(NODE_MODULES, { recursive: true }, (err) => cb(err)));
       queue.await(cb);
     });
     after((cb) => safeRm(TMP_DIR, cb));
