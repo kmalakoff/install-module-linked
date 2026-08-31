@@ -82,7 +82,7 @@ export default function ensureCached(installString: string, cachePath: string, o
       queue.defer((cb) => options.mkdir(tmp, (err) => cb(err)));
       queue.defer((cb) => fs.writeFile(path.join(tmp, 'package.json'), '{}', 'utf8', (err) => cb(err)));
       // biome-ignore lint/style/noNonNullAssertion: getSpecifier always sets the specifier when err is null
-      queue.defer((cb) => install(specifier!, tmp, cb, options.spawn));
+      queue.defer((cb) => install(specifier!, tmp, options, cb));
       queue.defer((qcb) => {
         // Verify npm actually created the package directory - npm may silently skip
         // installation (exit 0) when platform doesn't match (os/cpu/libc fields)
