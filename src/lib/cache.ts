@@ -5,7 +5,7 @@ import Queue from 'queue-cb';
 import tempSuffix from 'temp-suffix';
 import type { EnsureCachedCallback } from '../types.ts';
 import getSpecifier from './getSpecifier.ts';
-import { run as install } from './install.ts';
+import { default as install } from './install.ts';
 import parse from './parseInstallString.ts';
 import renameWithFallback from './renameWithFallback.ts';
 import type { ResolvedOptions } from './resolveOptions.ts';

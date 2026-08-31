@@ -7,7 +7,7 @@ import type { InstallCallback, InstallOptions } from '../types.ts';
 // before it can reach cmd.exe.
 const SAFE_SPECIFIER = /^[a-zA-Z0-9@/._^~<>=+\-| ]+$/;
 
-export function run(specifier: string, dest: string, options: InstallOptions, callback: InstallCallback): void {
+function run(specifier: string, dest: string, options: InstallOptions, callback: InstallCallback): void {
   if (!SAFE_SPECIFIER.test(specifier)) {
     return callback(new Error(`Invalid install string: ${specifier}`));
   }
@@ -17,6 +17,10 @@ export function run(specifier: string, dest: string, options: InstallOptions, ca
   });
 }
 
-export default function install(specifier: string, dest: string, options: InstallOptions, callback: InstallCallback): void {
+export default function install(specifier: string, dest: string, options: InstallOptions, callback: InstallCallback): void;
+export default function install(specifier: string, dest: string, options?: InstallOptions, callback?: InstallCallback): void {
+  callback = typeof options === 'function' ? options : (callback as InstallCallback);
+  options = typeof options === 'function' ? {} : ((options || {}) as InstallOptions);
+
   run(specifier, dest, options, callback);
 }
