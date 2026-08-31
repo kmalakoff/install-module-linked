@@ -2,8 +2,8 @@ import assert from 'assert';
 import Module from 'module';
 import os from 'os';
 import path from 'path';
-import resolveOptions from '../../src/lib/resolveOptions.ts';
 import url from 'url';
+import resolveOptions from '../../src/lib/resolveOptions.ts';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
