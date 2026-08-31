@@ -79,8 +79,8 @@ describe('cli', () => {
     it('shows error for missing command', (done) => {
       runCli([], (err, result) => {
         if (err || !result) return done(err ?? new Error('No result'));
-        assert.ok(result.stdout.indexOf('Missing command') >= 0, 'Should mention missing command');
-        assert.ok(result.stdout.indexOf('--help') >= 0, 'Should suggest --help');
+        assert.ok(result.stderr.indexOf('Missing command') >= 0, 'Should mention missing command');
+        assert.ok(result.stderr.indexOf('--help') >= 0, 'Should suggest --help');
         assert.notEqual(result.code, 0);
         done();
       });
@@ -89,8 +89,8 @@ describe('cli', () => {
     it('shows error for unrecognized command', (done) => {
       runCli(['unknown'], (err, result) => {
         if (err || !result) return done(err ?? new Error('No result'));
-        assert.ok(result.stdout.indexOf('Unrecognized command') >= 0, 'Should mention unrecognized command');
-        assert.ok(result.stdout.indexOf('--help') >= 0, 'Should suggest --help');
+        assert.ok(result.stderr.indexOf('Unrecognized command') >= 0, 'Should mention unrecognized command');
+        assert.ok(result.stderr.indexOf('--help') >= 0, 'Should suggest --help');
         assert.notEqual(result.code, 0);
         done();
       });

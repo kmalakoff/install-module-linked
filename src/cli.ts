@@ -1,25 +1,26 @@
-#!/usr/bin/env node
-
-import exit from 'exit-compat';
+// Parsing and dispatch only. Commands live in src/cli/, one file each,
+// lazy-loaded — nothing dependency-heavy may be imported at the top of this file.
 import fs from 'fs';
-import getopts from 'getopts-compat';
 import path from 'path';
 import url from 'url';
-import clear from './lib/clear.ts';
+import { COMMANDS } from './cli/index.ts';
+import type { Ctx } from './cli/types.ts';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-
-const ERROR_CODE = 7;
+const ERROR_CODE = 25;
 
 function getVersion(): string {
-  const packageJsonPath = path.join(__dirname, '..', '..', 'package.json');
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-  return packageJson.version;
+  try {
+    const packageJsonPath = path.join(__dirname, '..', '..', 'package.json');
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')) as { version?: string };
+    return packageJson.version ?? 'unknown';
+  } catch {
+    return 'unknown';
+  }
 }
 
 function printHelp(name: string): void {
-  const version = getVersion();
-  console.log(`${name} v${version}`);
+  console.log(`${name} v${getVersion()}`);
   console.log('');
   console.log(`Usage: ${name} [options] [command]`);
   console.log('');
@@ -31,41 +32,41 @@ function printHelp(name: string): void {
   console.log('  -h, --help       Print this help message');
 }
 
-export default (argv: string[], name?: string): void => {
-  name = name || 'iml';
-  const options = getopts(argv, {
-    alias: { version: 'v', help: 'h' },
-    boolean: ['version', 'help'],
-    stopEarly: true,
-  });
-
-  if (options.version) {
+export default async function cli(argv: string[], name = 'iml'): Promise<void> {
+  if (argv[0] === '--version' || argv[0] === '-v') {
     console.log(getVersion());
-    exit(0);
     return;
   }
-
-  if (options.help) {
+  if (argv.length === 0) {
+    console.error(`Missing command. Example usage: ${name} [command]`);
+    console.error(`Run "${name} --help" for more information.`);
+    process.exit(ERROR_CODE);
+  }
+  if (argv[0] === '--help' || argv[0] === '-h') {
     printHelp(name);
-    exit(0);
     return;
   }
 
-  const args = options._;
-  if (!args.length) {
-    console.log(`Missing command. Example usage: ${name} [command]`);
-    console.log(`Run "${name} --help" for more information.`);
-    exit(ERROR_CODE);
-    return;
-  }
+  const ctx: Ctx = {
+    name,
+    rest: argv.slice(1),
+    usageError(message) {
+      console.error(message);
+      process.exit(ERROR_CODE);
+    },
+    errorCode: ERROR_CODE,
+  };
 
-  if (args[0] === 'clear') {
-    clear();
-    exit(0);
-    return;
+  try {
+    const load = COMMANDS[argv[0]];
+    if (!load) {
+      console.error(`Unrecognized command: ${argv[0]}. Example usage: ${name} [command]`);
+      console.error(`Run "${name} --help" for more information.`);
+      process.exit(ERROR_CODE);
+    }
+    await (await load()).default(ctx);
+  } catch (err) {
+    console.error((err as Error).message);
+    process.exit(ERROR_CODE);
   }
-
-  console.log(`Unrecognized command: ${args[0]}. Example usage: ${name} [command]`);
-  console.log(`Run "${name} --help" for more information.`);
-  exit(ERROR_CODE);
-};
+}

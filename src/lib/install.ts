@@ -1,23 +1,21 @@
-import spawn from 'cross-spawn-cb';
-import { bind } from 'node-version-call-local';
 import path from 'path';
-import url from 'url';
-import type { InstallCallback } from '../types.ts';
+import { spawn } from '../compat.ts';
+import type { InstallCallback, SpawnFn } from '../types.ts';
 
-const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-const major = +process.versions.node.split('.')[0];
-const workerPath = path.join(__dirname, '..', '..', 'cjs', 'lib', 'install.js');
+// npm names and version/range specifiers never contain anything outside this
+// set; the Windows spawn path goes through a shell, so reject anything else
+// before it can reach cmd.exe.
+const SAFE_SPECIFIER = /^[a-zA-Z0-9@/._^~<>=+\-| ]+$/;
 
-function run(specifier: string, dest: string, callback: InstallCallback): void {
-  spawn('npm', ['install', specifier], { cwd: dest }, (err) => {
+export function run(specifier: string, dest: string, callback: InstallCallback, spawnFn: SpawnFn): void {
+  if (!SAFE_SPECIFIER.test(specifier)) {
+    return callback(new Error(`Invalid install string: ${specifier}`));
+  }
+  spawnFn('npm', ['install', specifier], { cwd: dest }, (err) => {
     err ? callback(err) : callback(undefined, path.join(dest, ...specifier.split('/')));
   });
 }
 
-type installFunction = (specifier: string, dest: string, callback: InstallCallback) => void;
-
-const worker = (major > 0 ? run : bind('>0.12', workerPath, { callbacks: true })) as installFunction;
-
 export default function install(specifier: string, dest: string, callback: InstallCallback): void {
-  worker(specifier, dest, callback);
+  run(specifier, dest, callback, spawn);
 }
