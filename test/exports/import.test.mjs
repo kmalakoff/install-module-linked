@@ -1,8 +1,12 @@
 import assert from 'assert';
-import installModule from 'install-module-linked';
+import installModule, { clear, install, parseInstallString, sync } from 'install-module-linked';
 
 describe('exports .mjs', () => {
   it('exists', () => {
     assert.equal(typeof installModule, 'function');
+    assert.equal(typeof clear, 'function');
+    assert.equal(typeof install, 'function');
+    assert.equal(typeof parseInstallString, 'function');
+    assert.equal(typeof sync, 'function');
   });
 });

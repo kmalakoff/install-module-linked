@@ -1,9 +1,9 @@
-import { safeRmSync } from 'fs-remove-compat';
-import { DEFAULT_CACHE_PATH } from '../constants.ts';
-
+import path from 'path';
+import { homedir, rmSync } from '../compat.ts';
 import type { CleanOptions } from '../types.ts';
 
-export default function clear(_options?: CleanOptions) {
-  safeRmSync(DEFAULT_CACHE_PATH);
-  console.log(`Cleaned ${DEFAULT_CACHE_PATH}`);
+export default function clear(options?: CleanOptions) {
+  const cachePath = path.join(homedir(), '.iml');
+  (options?.rmSync ?? rmSync)(cachePath);
+  console.log(`Cleaned ${cachePath}`);
 }
