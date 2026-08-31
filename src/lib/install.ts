@@ -1,6 +1,6 @@
 import path from 'path';
 import { spawn } from '../compat.ts';
-import type { InstallCallback, SpawnFn } from '../types.ts';
+import type { InstallCallback, InstallOptions, SpawnFn } from '../types.ts';
 
 // npm names and version/range specifiers never contain anything outside this
 // set; the Windows spawn path goes through a shell, so reject anything else
@@ -16,6 +16,6 @@ export function run(specifier: string, dest: string, callback: InstallCallback, 
   });
 }
 
-export default function install(specifier: string, dest: string, callback: InstallCallback): void {
-  run(specifier, dest, callback, spawn);
+export default function install(specifier: string, dest: string, options: InstallOptions, callback: InstallCallback): void {
+  run(specifier, dest, callback, options?.spawn ?? spawn);
 }
