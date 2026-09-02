@@ -1,4 +1,4 @@
-import workerAsync from './workers/async';
+import worker from './workers/async';
 import workerSync from './workers/sync.cjs';
 
 import type { InstallCallback, InstallOptions } from './types';
@@ -14,8 +14,8 @@ export default function installModule(installString: string, nodeModulesPath: st
   }
   options = options || {};
 
-  if (typeof callback === 'function') return workerAsync(installString, nodeModulesPath, options, callback) as undefined;
-  return new Promise((resolve, reject) => workerAsync(installString, nodeModulesPath, options, (err, dest) => (err ? reject(err) : resolve(dest))));
+  if (typeof callback === 'function') return worker(installString, nodeModulesPath, options, callback) as undefined;
+  return new Promise((resolve, reject) => worker(installString, nodeModulesPath, options, (err, dest) => (err ? reject(err) : resolve(dest))));
 }
 
 export function sync(installString: string, nodeModulesPath: string, options?: InstallOptions): string | undefined {
