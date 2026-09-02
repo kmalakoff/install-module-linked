@@ -69,5 +69,14 @@ describe('install-module-linked (promise)', () => {
       assert.equal(packageJSON.name, 'resolve-once');
       assert.ok(packageJSON.version.length);
     });
+
+    it('link multiple (parallel) - cleans up temp directories', async () => {
+      await Promise.all([...Array(STRESS_COUNT)].map((_) => installModule('resolve-once', NODE_MODULES, { cachePath: CACHE_DIR })));
+
+      // Check that no temp directories remain (they have a numeric suffix like module@version-123456)
+      const cacheEntries = fs.readdirSync(CACHE_DIR);
+      const tempDirs = cacheEntries.filter((entry) => /-\d+$/.test(entry));
+      assert.deepEqual(tempDirs, [], `Temp directories should be cleaned up, but found: ${tempDirs.join(', ')}`);
+    });
   });
 });
