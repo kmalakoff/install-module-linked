@@ -20,8 +20,7 @@ const LOCK_OPTIONS = {
 export default function ensureCached(installString: string, cachePath: string, options: ResolvedOptions, callback: EnsureCachedCallback) {
   getSpecifier(installString, options.fetchText, (err, specifier) => {
     if (err) return callback(err);
-    // biome-ignore lint/style/noNonNullAssertion: getSpecifier always sets the specifier when err is null
-    const cachedAt = path.join(cachePath, specifier!);
+    const cachedAt = path.join(cachePath, specifier as string);
     const lockPath = `${cachedAt}.lock`;
     const readyPath = path.join(cachedAt, '.ready');
     const { name } = parse(installString);
@@ -81,8 +80,7 @@ export default function ensureCached(installString: string, cachePath: string, o
       const queue = new Queue(1);
       queue.defer((cb) => options.mkdir(tmp, (err) => cb(err)));
       queue.defer((cb) => fs.writeFile(path.join(tmp, 'package.json'), '{}', 'utf8', (err) => cb(err)));
-      // biome-ignore lint/style/noNonNullAssertion: getSpecifier always sets the specifier when err is null
-      queue.defer((cb) => install(specifier!, tmp, options, cb));
+      queue.defer((cb) => install(specifier as string, tmp, options, cb));
       queue.defer((qcb) => {
         // Verify npm actually created the package directory - npm may silently skip
         // installation (exit 0) when platform doesn't match (os/cpu/libc fields)
