@@ -28,8 +28,7 @@ export default function installModule(installString: string, nodeModulesPath: st
       const tempDest = tempSuffix(dest);
       const queue = new Queue(1);
       queue.defer((cb) => resolved.mkdir(path.dirname(dest), (err) => cb(err)));
-      // biome-ignore lint/style/noNonNullAssertion: cache always sets cachedAt when err is null
-      queue.defer((cb) => fs.symlink(cachedAt!, tempDest, symlinkType, (err) => cb(err)));
+      queue.defer((cb) => fs.symlink(cachedAt as string, tempDest, symlinkType, (err) => cb(err)));
       queue.defer((cb) => {
         fs.rename(tempDest, dest, (err) => {
           // If rename fails because dest exists, another process won - that's ok
