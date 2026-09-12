@@ -3,7 +3,7 @@ import Module from 'module';
 import os from 'os';
 import path from 'path';
 import url from 'url';
-import resolveOptions from '../../src/lib/resolveOptions.ts';
+import resolveOptions from '../../../src/lib/resolveOptions.ts';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
@@ -29,7 +29,7 @@ describe('resolveOptions', () => {
   });
 
   it('fills gaps from the workerModule before the defaults', () => {
-    const workerModule = path.join(__dirname, '..', 'data', 'worker-module.cjs');
+    const workerModule = path.join(__dirname, '..', '..', 'data', 'worker-module.cjs');
     const fixture = _require(workerModule) as { mkdir: unknown };
     const resolved = resolveOptions({ workerModule });
     assert.equal(resolved.mkdir, fixture.mkdir);
