@@ -1,13 +1,21 @@
-## install-module-linked
+# install-module-linked
 
 Installs and symlinks a module into node_modules
 
-### Example 1
+Requires Node.js 18 or newer.
 
-```typescript
+```sh
+npm install install-module-linked
+```
+
+```js
+import path from 'path';
 import installModule from 'install-module-linked';
 
-const res = await installModule('my-module@1.2.3', /* path to node_modules */ );
+const nodeModulesPath = path.join(process.cwd(), 'node_modules');
+const installedAt = await installModule('is-number@7.0.0', nodeModulesPath);
+
+console.log(installedAt);
 ```
 
 ### Documentation
