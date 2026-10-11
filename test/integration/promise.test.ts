@@ -6,6 +6,7 @@ import installModule from 'install-module-linked';
 import path from 'path';
 import Queue from 'queue-cb';
 import url from 'url';
+import cacheEntries from '../lib/cacheEntries.ts';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp', 'promise');
@@ -22,6 +23,43 @@ describe('install-module-linked (promise)', () => {
       queue.await(cb);
     });
     after((cb) => safeRm(TMP_DIR, cb));
+
+    it('install exact version without a registry lookup', async () => {
+      const fetchText = (_url: string, callback: (err: Error | null) => void) => callback(new Error('no registry lookup expected'));
+      await installModule('resolve-once@1.0.0', NODE_MODULES, { cachePath: CACHE_DIR, fetchText });
+      assert.equal(JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'resolve-once', 'package.json'), 'utf8')).version, '1.0.0');
+    });
+
+    it('install range resolves the matching version', async () => {
+      await installModule('resolve-once@0.6.x', NODE_MODULES, { cachePath: CACHE_DIR });
+      assert.equal(JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'resolve-once', 'package.json'), 'utf8')).version, '0.6.21');
+      assert.deepEqual(cacheEntries(CACHE_DIR), ['resolve-once@0.6.21']);
+    });
+
+    it('install dist-tag resolves the tagged version', async () => {
+      await installModule('resolve-once', NODE_MODULES, { cachePath: CACHE_DIR });
+      await installModule('resolve-once@latest', path.join(TMP_DIR, 'tagged', 'node_modules'), { cachePath: CACHE_DIR });
+      const latest = JSON.parse(fs.readFileSync(path.join(TMP_DIR, 'tagged', 'node_modules', 'resolve-once', 'package.json'), 'utf8')).version;
+      assert.equal(latest, JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'resolve-once', 'package.json'), 'utf8')).version);
+      assert.deepEqual(cacheEntries(CACHE_DIR), [`resolve-once@${latest}`]);
+    });
+
+    it('install prerelease range stays within its patch', async () => {
+      await installModule('@sinonjs/commons@~4.0.0-alpha.0', NODE_MODULES, { cachePath: CACHE_DIR });
+      const version = JSON.parse(fs.readFileSync(path.join(NODE_MODULES, '@sinonjs', 'commons', 'package.json'), 'utf8')).version;
+      assert.ok(/^4\.0\.0-alpha\.\d+$/.test(version));
+      assert.deepEqual(cacheEntries(path.join(CACHE_DIR, '@sinonjs')), [`commons@${version}`]);
+    });
+
+    it('install unmatched range fails naming it', async () => {
+      let error: Error | undefined;
+      try {
+        await installModule('resolve-once@99.x', NODE_MODULES, { cachePath: CACHE_DIR });
+      } catch (err) {
+        error = err as Error;
+      }
+      assert.ok(error && /No matching version found for resolve-once@99\.x/.test(error.message));
+    });
 
     it('install with version', async () => {
       await installModule('resolve-once@1.0.0', NODE_MODULES, { cachePath: CACHE_DIR });

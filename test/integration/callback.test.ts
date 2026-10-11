@@ -6,6 +6,7 @@ import installModule from 'install-module-linked';
 import path from 'path';
 import Queue from 'queue-cb';
 import url from 'url';
+import cacheEntries from '../lib/cacheEntries.ts';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp', 'callback');
@@ -21,6 +22,15 @@ describe('install-module-linked (callback)', () => {
       queue.await(cb);
     });
     after((cb) => safeRm(TMP_DIR, cb));
+
+    it('install range resolves the matching version', (done) => {
+      installModule('resolve-once@0.6.x', NODE_MODULES, { cachePath: CACHE_DIR }, (err) => {
+        if (err) return done(err);
+        assert.equal(JSON.parse(fs.readFileSync(path.join(NODE_MODULES, 'resolve-once', 'package.json'), 'utf8')).version, '0.6.21');
+        assert.deepEqual(cacheEntries(CACHE_DIR), ['resolve-once@0.6.21']);
+        done();
+      });
+    });
 
     it('install with version', (done) => {
       installModule('resolve-once@1.0.0', NODE_MODULES, { cachePath: CACHE_DIR }, (err) => {
